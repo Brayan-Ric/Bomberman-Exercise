@@ -13,8 +13,9 @@ fn main() {
         }
     };
 
-    if let Err(error) = chess_engine::game(&file_name) {
-        chess_error::print_error_messages(error);
-    }        
+    match chess_engine::game(&file_name) {
+        Ok(c) => println!("{}", c),
+        Err(error_type) => chess_error::print_error_messages(error_type),
+    }       
 
 }

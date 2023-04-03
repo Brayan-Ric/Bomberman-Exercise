@@ -30,7 +30,7 @@ pub fn process_row(
     Ok(())
 }
 
-pub fn recreate_future_moves(matrix: &[char; 64]) -> Result<(), ChessError> {
+pub fn recreate_future_moves(matrix: &[char; 64]) -> Result<char, ChessError> {
     match chess_syntax_validator::validate_board_pieces(matrix) {
         Ok(()) => (),
         Err(error_type) => return Err(error_type),
@@ -46,9 +46,8 @@ pub fn recreate_future_moves(matrix: &[char; 64]) -> Result<(), ChessError> {
     // let mut chess_pieces = find_chess_pieces(matrix);
     let (pieces1, pieces2) = get_chess_pieces(matrix)?;
 
-    simulate_next_move(&pieces1, &pieces2);
-    // Ok(true)
-    Ok(())
+    Ok(simulate_next_move(&pieces1, &pieces2))
+
 }
 
 // Hago unwrap porque antes valide que tenia 2 piezas en el tablero
@@ -85,22 +84,22 @@ fn find_chess_pieces(matrix: &[char; 64]) -> HashMap<char, (usize, usize)> {
     chess_pieces
 }
 
-fn simulate_next_move(piece_1: &ChessPiece, piece_2: &ChessPiece) {
+fn simulate_next_move(piece_1: &ChessPiece, piece_2: &ChessPiece) -> char{
     let piece_1_can_capture = piece_1.can_capture(piece_2);
     let piece_2_can_capture = piece_2.can_capture(piece_1);
 
     if piece_1_can_capture && piece_2_can_capture {
-        println!("E");
+        return 'E';
     } else if !piece_1_can_capture && !piece_2_can_capture {
-        println!("P");
+        return 'P';
     } else if (piece_1_can_capture && piece_1.is_white_piece()) || (piece_2_can_capture && piece_2.is_white_piece()) {
-        println!("B");
+        return 'B';
     } else {
-        println!("N");
+        return 'N';
     }
 }
 
-pub fn game(file_name: &String) -> Result<(), ChessError>{
+pub fn game(file_name: &String) -> Result<char, ChessError>{
     let file = chess_board_loader::open_file(&file_name)?;
 
     let mut matrix = ['-'; 64];
@@ -111,9 +110,7 @@ pub fn game(file_name: &String) -> Result<(), ChessError>{
     };
 
     match recreate_future_moves(&matrix) {
-        Ok(()) => (),
+        Ok(c) => return Ok(c),
         Err(error_type) => return Err(error_type),
     }    
-    
-    Ok(())
 }
