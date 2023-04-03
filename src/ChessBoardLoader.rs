@@ -4,13 +4,17 @@ use std::io::BufReader;
 use std::io::prelude::*;
 pub use super::ChessSyntaxValidator;
 pub use super::ChessEngine;
+pub use super::chess_error::ChessError;
 
 
 
-pub fn command_reader() -> String{
+pub fn command_reader() -> Result<String, ChessError>{
     let mut args: Vec<String> = env::args().collect();
-    ChessSyntaxValidator::validate_argument_count(&args);
-    return args.pop().unwrap();
+    match ChessSyntaxValidator::validate_argument_count(&args)  {
+        Ok(_) => (),
+        Err(error) => return Err(error),
+    }    
+    return Ok(args.pop().unwrap());
 }
 
 pub fn open_file(file_name: &str) -> File{

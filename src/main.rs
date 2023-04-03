@@ -7,7 +7,13 @@ pub use ajedrez::chess_error;
 
 fn main() {
 
-    let file_name = ChessBoardLoader::command_reader();
+    let file_name = match ChessBoardLoader::command_reader() {
+        Ok(path) => path,
+        Err(error_type) => {
+            chess_error::print_error_messages(error_type);
+            return ();
+        }
+    };
 
     let file = ChessBoardLoader::open_file(&file_name);
 

@@ -1,5 +1,7 @@
 const ROW_LENGTH: usize = 15;
 const EMPTY_CELL: char = '_';
+pub use super::chess_error::ChessError;
+
 
 const MAXIMUM_NUMBER_PIECES: i32 = 2;
 const MAX_WHITE_PIECES_COUNT: i32 = 1;
@@ -19,10 +21,11 @@ _ _ _ _ _ _ _ _";
 
 // len("_ _ _ _ _ _ _ _") ==> 15
 
-pub fn validate_argument_count(args: &Vec<String>){
+pub fn validate_argument_count(args: &Vec<String>) -> Result<(), ChessError>{
     if args.len() != 2 {
-        panic_with_format("Use --> cargo run -- archivo.txt");
+        return Err(ChessError::ArgsError);
     }
+    Ok(())
 }
 pub fn validate_row_length(row: &String, i_row: usize){
     if row.len() != ROW_LENGTH {
