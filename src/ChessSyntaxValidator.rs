@@ -27,11 +27,13 @@ pub fn validate_argument_count(args: &Vec<String>) -> Result<(), ChessError>{
     }
     Ok(())
 }
-pub fn validate_row_length(row: &String, i_row: usize){
+pub fn validate_row_length(row: &String, i_row: usize) -> Result<(), ChessError>{
     if row.len() != ROW_LENGTH {
-        let error = format!("La fila {} no cumple con el formato establecido", i_row + 1);
-        panic_syntax_chessboard(&error);
+        // let error = format!("La fila {} no cumple con el formato establecido", i_row + 1);
+        // panic_syntax_chessboard(&error);
+        return Err(ChessError::InvalidSyntax);
     }
+    Ok(())
 }
 
 fn count_pieces(matrix:& [char; 64]) -> i32{

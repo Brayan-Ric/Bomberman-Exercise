@@ -25,14 +25,14 @@ fn main() {
 
     let mut matrix =['-'; 64];
 
-    ChessBoardLoader::read_file(&file, &mut matrix);
+    match ChessBoardLoader::read_file(&file, &mut matrix) {
+        Ok(()) => (),
+        Err(error_type) => {
+            chess_error::print_error_messages(error_type);
+            return ();
+        },
+    };
 
-    // println!("{:?}", matrix);
-
-    // match ChessEngine::recreate_future_moves(&matrix){
-    //     Ok(_) => _,
-    //     ChessError => print!("Hola")
-    // } 
 
     if let Err(error) = ChessEngine::recreate_future_moves(&matrix) {
         chess_error::print_error_messages(error);

@@ -17,9 +17,13 @@ pub fn complete_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]){
 }
 
 
-pub fn process_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]){
-    ChessSyntaxValidator::validate_row_length(&row, i_row);
-    complete_row(row, i_row, matrix);
+pub fn process_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]) -> Result<(), ChessError>{
+    match ChessSyntaxValidator::validate_row_length(&row, i_row) {
+        Ok(()) => complete_row(row, i_row, matrix),
+        Err(type_error) => return Err(type_error),
+    };
+    // complete_row(row, i_row, matrix);
+    Ok(())
 }
 
 
@@ -32,7 +36,7 @@ pub fn recreate_future_moves(matrix:&[char; 64]) -> Result<(), ChessError> {
     // asi que lo siguiente no me dara error
     // let mut chess_pieces = find_chess_pieces(matrix);
     let (pieces1, pieces2) = get_chess_pieces(matrix)?;
-    
+
     simulate_next_move(&pieces1, &pieces2);
     // Ok(true)
     Ok(())
@@ -49,7 +53,7 @@ fn get_chess_pieces(matrix:&[char; 64]) -> Result<(ChessPiece, ChessPiece), Ches
     let key = iter.next().unwrap();
     let (i, j) = chess_pieces.get(&key).unwrap();
     let piece1 = ChessPiece::chess_piece_from(*key, *i, *j)?;
-    
+
 
     //Creo 2da pieza
     let key = iter.next().unwrap();
