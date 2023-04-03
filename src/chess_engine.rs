@@ -7,7 +7,7 @@ const SQUARE_SEPARATOR: char = ' ';
 const NUMBER_OF_COLUMNS: usize = 8;
 const CHESS_PIECES: [char; 12] = ['R', 'D', 'A', 'C', 'T', 'P', 'r', 'd', 'a', 'c', 't', 'p'];
 
-pub fn complete_row<'a>(row: &'a String, i_row: usize, matrix: &mut [char; 64]) {
+pub fn complete_row(row: &str, i_row: usize, matrix: &mut [char; 64]) {
     let mut pos = i_row * NUMBER_OF_COLUMNS;
     for data in row.split(SQUARE_SEPARATOR) {
         matrix[pos] = data.chars().next().unwrap();
@@ -15,12 +15,12 @@ pub fn complete_row<'a>(row: &'a String, i_row: usize, matrix: &mut [char; 64]) 
     }
 }
 
-pub fn process_row<'a>(
-    row: &'a String,
+pub fn process_row(
+    row: &String,
     i_row: usize,
     matrix: &mut [char; 64],
 ) -> Result<(), ChessError> {
-    match chess_syntax_validator::validate_row_length(&row) {
+    match chess_syntax_validator::validate_row_length(row) {
         Ok(()) => complete_row(row, i_row, matrix),
         Err(type_error) => return Err(type_error),
     };
@@ -57,12 +57,12 @@ fn get_chess_pieces(matrix: &[char; 64]) -> Result<(ChessPiece, ChessPiece), Che
 
     //Creo 1era pieza
     let key = iter.next().unwrap();
-    let (i, j) = chess_pieces.get(&key).unwrap();
+    let (i, j) = chess_pieces.get(key).unwrap();
     let piece1 = ChessPiece::chess_piece_from(*key, *i, *j)?;
 
     //Creo 2da pieza
     let key = iter.next().unwrap();
-    let (i, j) = chess_pieces.get(&key).unwrap();
+    let (i, j) = chess_pieces.get(key).unwrap();
     let piece2 = ChessPiece::chess_piece_from(*key, *i, *j)?;
 
     Ok((piece1, piece2))
@@ -71,8 +71,7 @@ fn get_chess_pieces(matrix: &[char; 64]) -> Result<(ChessPiece, ChessPiece), Che
 fn find_chess_pieces(matrix: &[char; 64]) -> HashMap<char, (usize, usize)> {
     let mut chess_pieces: HashMap<char, (usize, usize)> = HashMap::new();
 
-    let mut i = 0;
-    for square in matrix {
+    for (i, square) in matrix.iter().enumerate() {
         for piece in CHESS_PIECES {
             if *square == piece {
                 let row = i.div(NUMBER_OF_COLUMNS);
@@ -80,7 +79,6 @@ fn find_chess_pieces(matrix: &[char; 64]) -> HashMap<char, (usize, usize)> {
                 chess_pieces.insert(piece, (row + 1, column + 1));
             }
         }
-        i += 1;
     }
     chess_pieces
 }

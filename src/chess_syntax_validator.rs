@@ -41,7 +41,7 @@ fn validate_square(square: &char) -> Result<(), ChessError> {
             return Ok(());
         }
     }
-    return Err(ChessError::ChessInvalidCharError);
+    Err(ChessError::ChessInvalidCharError)
 }
 
 pub fn validate_board_pieces(matrix: &[char; 64]) -> Result<(), ChessError> {
@@ -67,7 +67,7 @@ fn count_matching_values_in_matrix(matrix: &[char; 64], values: &[char; 6]) -> i
             break;
         }
     }
-    return count;
+    count
 }
 
 pub fn validate_one_black_one_white(matrix: &[char; 64]) -> Result<(), ChessError> {

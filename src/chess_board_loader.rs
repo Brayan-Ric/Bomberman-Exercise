@@ -12,7 +12,7 @@ pub fn command_reader() -> Result<String, ChessError> {
         Ok(_) => (),
         Err(error) => return Err(error),
     }
-    return Ok(args.pop().unwrap());
+    Ok(args.pop().unwrap())
 }
 
 pub fn open_file(file_name: &str) -> Result<File, ChessError> {
