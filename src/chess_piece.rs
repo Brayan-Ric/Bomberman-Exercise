@@ -1,6 +1,6 @@
 pub use super::chess_error::ChessError;
-pub use super::chess_piece_type::ChessPieceType;
 pub use super::chess_piece_type;
+pub use super::chess_piece_type::ChessPieceType;
 pub use super::chess_position::ChessPosition;
 enum ChessPieceColor {
     White,
@@ -32,32 +32,40 @@ pub struct ChessPiece {
 }
 
 impl ChessPiece {
-    pub fn chess_piece_from(chess_piece_char: char, row: usize, column: usize) ->  Result<ChessPiece, ChessError>{
+    pub fn chess_piece_from(
+        chess_piece_char: char,
+        row: usize,
+        column: usize,
+    ) -> Result<ChessPiece, ChessError> {
         let piece_type = chess_piece_type::get_chess_piece_type(chess_piece_char)?;
         let position = ChessPosition::create_position(row, column);
         let color = get_chess_piece_color(chess_piece_char)?;
-        Ok(ChessPiece { piece_type, position, color })
+        Ok(ChessPiece {
+            piece_type,
+            position,
+            color,
+        })
     }
 
-    pub fn is_black_piece(&self) -> bool{
+    pub fn is_black_piece(&self) -> bool {
         match self.color {
             ChessPieceColor::Black => true,
             ChessPieceColor::White => false,
         }
     }
 
-    pub fn is_white_piece(&self) -> bool{
+    pub fn is_white_piece(&self) -> bool {
         match self.color {
             ChessPieceColor::White => true,
             ChessPieceColor::Black => false,
         }
     }
 
-    pub fn can_capture(&self, another_piece: &ChessPiece) -> bool{
+    pub fn can_capture(&self, another_piece: &ChessPiece) -> bool {
         self.capture(&another_piece)
     }
 
-    fn capture(&self, another_piece: &ChessPiece) -> bool{
+    fn capture(&self, another_piece: &ChessPiece) -> bool {
         match self.piece_type {
             ChessPieceType::King => self.king_capture(another_piece),
             ChessPieceType::Queen => self.queen_capture(another_piece),
@@ -68,28 +76,28 @@ impl ChessPiece {
         }
     }
 
-    fn king_capture(&self, another_piece: &ChessPiece) -> bool{
+    fn king_capture(&self, another_piece: &ChessPiece) -> bool {
         self.position.is_adjacent(&another_piece.position)
     }
 
-    fn queen_capture(&self, another_piece: &ChessPiece) -> bool{
+    fn queen_capture(&self, another_piece: &ChessPiece) -> bool {
         self.position.are_aligned(&another_piece.position)
     }
 
-    fn rook_capture(&self, another_piece: &ChessPiece) -> bool{
-        self.position.are_in_same_row_or_column(&another_piece.position)
+    fn rook_capture(&self, another_piece: &ChessPiece) -> bool {
+        self.position
+            .are_in_same_row_or_column(&another_piece.position)
     }
-    
-    fn bishop_capture(&self, another_piece: &ChessPiece) -> bool{
+
+    fn bishop_capture(&self, another_piece: &ChessPiece) -> bool {
         self.position.are_in_diagonal(&another_piece.position)
     }
 
-    fn knight_capture(&self, another_piece: &ChessPiece) -> bool{
+    fn knight_capture(&self, another_piece: &ChessPiece) -> bool {
         self.position.are_in_l(&another_piece.position)
     }
 
-    fn pawn_capture(&self, another_piece: &ChessPiece) -> bool{
+    fn pawn_capture(&self, another_piece: &ChessPiece) -> bool {
         self.position.are_diagonal_1(&another_piece.position)
     }
 }
-
