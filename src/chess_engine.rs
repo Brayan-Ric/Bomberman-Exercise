@@ -1,4 +1,4 @@
-pub use super::ChessSyntaxValidator;
+pub use super::chess_syntax_validator;
 use std::{collections::HashMap, ops::Div};
 pub use super::chess_error::ChessError;
 pub use super::chess_piece::ChessPiece;
@@ -18,7 +18,7 @@ pub fn complete_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]){
 
 
 pub fn process_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]) -> Result<(), ChessError>{
-    match ChessSyntaxValidator::validate_row_length(&row) {
+    match chess_syntax_validator::validate_row_length(&row) {
         Ok(()) => complete_row(row, i_row, matrix),
         Err(type_error) => return Err(type_error),
     };
@@ -28,12 +28,12 @@ pub fn process_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]) ->
 
 
 pub fn recreate_future_moves(matrix:&[char; 64]) -> Result<(), ChessError> {
-    match ChessSyntaxValidator::validate_board_pieces(matrix) {
+    match chess_syntax_validator::validate_board_pieces(matrix) {
         Ok(()) => (),
         Err(error_type) => return Err(error_type),
     };
 
-    match ChessSyntaxValidator::validate_one_black_one_white(matrix) {
+    match chess_syntax_validator::validate_one_black_one_white(matrix) {
         Ok(()) => (),
         Err(error_type) => return Err(error_type),
     }

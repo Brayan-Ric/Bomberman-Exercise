@@ -1,8 +1,8 @@
-pub mod ChessSyntaxValidator;
+pub mod chess_syntax_validator;
 
-pub mod ChessBoardLoader;
+pub mod chess_board_loader;
 
-pub mod ChessEngine;
+pub mod chess_engine;
 
 pub mod chess_piece;
 
