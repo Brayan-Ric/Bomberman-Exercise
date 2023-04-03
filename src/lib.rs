@@ -11,3 +11,6 @@ pub mod chess_error;
 pub mod chess_piece_type;
 
 pub mod chess_position;
+
+#[cfg(test)]
+pub mod test;

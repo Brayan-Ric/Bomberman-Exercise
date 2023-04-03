@@ -33,3 +33,22 @@ pub fn read_file(file: &File, matrix: &mut [char; 64]) -> Result<(), ChessError>
     }
     Ok(())
 }
+
+#[cfg(test)]
+pub mod test {
+    use super::*;
+    #[test]
+    fn test_open_file_error(){
+        let result = open_file("ArchivoNoExiste.txt");
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_open_file_ok(){
+        let result = open_file("./TablerosDePrueba/TableroExistente.txt");
+        assert!(match result {
+        Ok(_) => true,
+        _ => false,
+        });
+    }
+}
