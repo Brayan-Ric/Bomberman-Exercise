@@ -44,9 +44,6 @@ impl ChessPosition {
     pub fn are_in_diagonal(&self, another_position: &ChessPosition) -> bool{
         let dx = ((self.row as i32) - (another_position.row as i32)).abs();
         let dy = ((self.column as i32) - (another_position.column as i32)).abs();
-        // println!("Valor de self, i:{} y j:{}", self.row, self.column);
-        // println!("Valor de another_position, i:{} y j:{}", another_position.row, another_position.column);
-        // println!("Valor de dx:{} y dy:{}", dx, dy);
         dx == dy
     }
 
