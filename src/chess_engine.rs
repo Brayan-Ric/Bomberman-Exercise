@@ -1,4 +1,6 @@
 pub use super::chess_error::ChessError;
+pub use super::chess_error;
+pub use super::chess_board_loader;
 pub use super::chess_piece::ChessPiece;
 pub use super::chess_syntax_validator;
 use std::{collections::HashMap, ops::Div};
@@ -96,4 +98,22 @@ fn simulate_next_move(piece_1: &ChessPiece, piece_2: &ChessPiece) {
     } else {
         println!("N");
     }
+}
+
+pub fn game(file_name: &String) -> Result<(), ChessError>{
+    let file = chess_board_loader::open_file(&file_name)?;
+
+    let mut matrix = ['-'; 64];
+
+    match chess_board_loader::read_file(&file, &mut matrix) {
+        Ok(()) => (),
+        Err(error_type) => return Err(error_type),
+    };
+
+    match recreate_future_moves(&matrix) {
+        Ok(()) => (),
+        Err(error_type) => return Err(error_type),
+    }    
+    
+    Ok(())
 }
