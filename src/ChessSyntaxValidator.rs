@@ -3,7 +3,7 @@ const EMPTY_CELL: char = '_';
 pub use super::chess_error::ChessError;
 
 
-const MAXIMUM_NUMBER_PIECES: i32 = 2;
+// const MAXIMUM_NUMBER_PIECES: i32 = 2;
 const MAX_WHITE_PIECES_COUNT: i32 = 1;
 const MAX_BLACK_PIECES_COUNT: i32 = 1;
 const CHESS_PIECES: [char; 12] = ['R', 'D', 'A', 'C', 'T', 'P', 'r', 'd', 'a', 'c', 't', 'p'];
@@ -27,49 +27,33 @@ pub fn validate_argument_count(args: &Vec<String>) -> Result<(), ChessError>{
     }
     Ok(())
 }
-pub fn validate_row_length(row: &String, i_row: usize) -> Result<(), ChessError>{
+pub fn validate_row_length(row: &String) -> Result<(), ChessError>{
     if row.len() != ROW_LENGTH {
-        // let error = format!("La fila {} no cumple con el formato establecido", i_row + 1);
-        // panic_syntax_chessboard(&error);
         return Err(ChessError::InvalidSyntax);
     }
     Ok(())
 }
 
-fn count_pieces(matrix:& [char; 64]) -> i32{
-    let mut count = 0;
-    for square in matrix{
-        for piece in CHESS_PIECES {
-            if *square == piece {
-                count += 1;
-            }
-        }
-    }
-    count
-}
-
-pub fn validate_number_of_pieces(matrix:& [char; 64]){
-    if count_pieces(matrix) != MAXIMUM_NUMBER_PIECES {
-        panic_with_format("Para simular las futuras jugadas se necesitan 2 piezas de ajedrez.\nSu archivo no cumple con ese requisito\n");
-    }
-}
-
-fn validate_square(square: &char){
+fn validate_square(square: &char) -> Result<(), ChessError>{
     if *square == EMPTY_CELL {
-        return;
+        return Ok(());
     }
     for piece in CHESS_PIECES{
         if *square == piece {
-            return;
+            return Ok(());
         }
     }
-    panic_invalid_piece();
+    return Err(ChessError::ChessInvalidCharError);
 }
 
-pub fn validate_board_pieces(matrix:& [char; 64]){
+pub fn validate_board_pieces(matrix:& [char; 64]) -> Result<(), ChessError>{
     for c in matrix.iter(){
-        validate_square(c);
+        match validate_square(c) {
+            Ok(()) => continue,
+            Err(error_type) => return Err(error_type), 
+        }
     }
+    Ok(())
 }
 
 fn count_matching_values_in_matrix(matrix:& [char; 64], values:& [char; 6]) -> i32{
@@ -88,27 +72,18 @@ fn count_matching_values_in_matrix(matrix:& [char; 64], values:& [char; 6]) -> i
     return count;
 }
 
-pub fn validate_one_black_one_white(matrix:& [char; 64]){
+pub fn validate_one_black_one_white(matrix:& [char; 64]) -> Result<(), ChessError>{
     let black_pieces_count = count_matching_values_in_matrix(matrix, &CHESS_PIECES_BLACK);
     if black_pieces_count != MAX_BLACK_PIECES_COUNT {
-        panic_with_format("Solo debe haber 1 pieza de cada color en el tablero");
+        return Err(ChessError::InvalidPieceCount);
     }
     let white_pieces_count = count_matching_values_in_matrix(matrix, &CHESS_PIECES_WHITE);
     if white_pieces_count != MAX_WHITE_PIECES_COUNT {
-        panic_with_format("Solo debe haber 1 pieza de cada color en el tablero");
+        return Err(ChessError::InvalidPieceCount);
     }
+    Ok(())
 }
 
-
-fn panic_invalid_piece(){
-    let error = format!("Pieza no valida encontrada.\nPiezas validas:{:?}\nCasilla vacia: ' '", CHESS_PIECES);
-    panic_with_format(&error);
-}
-
-fn panic_with_format(error: &str){
-    // format!()
-    panic!("\nError: [{}]\n", error);
-}
 
 pub fn panic_syntax_chessboard(error: &str){
     panic!("\nError: [{}.\nGuiese del siguiente ejemplo:\n{}\nPara mas detalles: https://taller-1-fiuba-rust.github.io/proyecto/23C1/ejercicio_individual.html]", error, DESCRIPTIVE_CHESSBOARD);

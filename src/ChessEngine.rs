@@ -18,7 +18,7 @@ pub fn complete_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]){
 
 
 pub fn process_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]) -> Result<(), ChessError>{
-    match ChessSyntaxValidator::validate_row_length(&row, i_row) {
+    match ChessSyntaxValidator::validate_row_length(&row) {
         Ok(()) => complete_row(row, i_row, matrix),
         Err(type_error) => return Err(type_error),
     };
@@ -28,9 +28,15 @@ pub fn process_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]) ->
 
 
 pub fn recreate_future_moves(matrix:&[char; 64]) -> Result<(), ChessError> {
-    ChessSyntaxValidator::validate_board_pieces(matrix);
-    // ChessSyntaxValidator::validate_number_of_pieces(matrix); validate_one_black_one_white hace los mismo y mejor
-    ChessSyntaxValidator::validate_one_black_one_white(matrix);
+    match ChessSyntaxValidator::validate_board_pieces(matrix) {
+        Ok(()) => (),
+        Err(error_type) => return Err(error_type),
+    };
+
+    match ChessSyntaxValidator::validate_one_black_one_white(matrix) {
+        Ok(()) => (),
+        Err(error_type) => return Err(error_type),
+    }
 
     // Con validate_one_black_one_white me asegure que hay 2 piezas,
     // asi que lo siguiente no me dara error
