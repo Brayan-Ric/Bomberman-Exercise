@@ -10,6 +10,11 @@ enum ChessPieceType {
     Pawn,
 }
 
+enum ChessPieceColor {
+    White,
+    Black,
+}
+
 // pub enum ChessPieceError {
 //     InvalidPiece,
 // }
@@ -37,8 +42,11 @@ impl ChessPosition {
     }
 
     pub fn are_in_diagonal(&self, another_position: &ChessPosition) -> bool{
-        let dx = ((self.row - another_position.row) as i32).abs();
-        let dy = ((self.column - another_position.column) as i32).abs();
+        let dx = ((self.row as i32) - (another_position.row as i32)).abs();
+        let dy = ((self.column as i32) - (another_position.column as i32)).abs();
+        // println!("Valor de self, i:{} y j:{}", self.row, self.column);
+        // println!("Valor de another_position, i:{} y j:{}", another_position.row, another_position.column);
+        // println!("Valor de dx:{} y dy:{}", dx, dy);
         dx == dy
     }
 
@@ -86,9 +94,28 @@ fn get_chess_piece_type(chess_piece_char: char) -> Result<ChessPieceType, ChessE
     }
 }
 
+fn get_chess_piece_color(chess_piece_char: char) -> Result<ChessPieceColor, ChessError> {
+    match chess_piece_char {
+        'R' => Ok(ChessPieceColor::Black),
+        'D' => Ok(ChessPieceColor::Black),
+        'C' => Ok(ChessPieceColor::Black),
+        'A' => Ok(ChessPieceColor::Black),
+        'T' => Ok(ChessPieceColor::Black),
+        'P' => Ok(ChessPieceColor::Black),
+        'r' => Ok(ChessPieceColor::White),
+        'd' => Ok(ChessPieceColor::White),
+        'c' => Ok(ChessPieceColor::White),
+        'a' => Ok(ChessPieceColor::White),
+        't' => Ok(ChessPieceColor::White),
+        'p' => Ok(ChessPieceColor::White),
+        _ => Err(ChessError::InvalidPiece),
+    }
+}
+
 pub struct ChessPiece {
     piece_type: ChessPieceType,
     position: ChessPosition,
+    color: ChessPieceColor,
 }
 
 
@@ -97,7 +124,22 @@ impl ChessPiece {
     pub fn chess_piece_from(chess_piece_char: char, row: usize, column: usize) ->  Result<ChessPiece, ChessError>{
         let piece_type = get_chess_piece_type(chess_piece_char)?;
         let position = ChessPosition { row, column };
-        Ok(ChessPiece { piece_type, position })
+        let color = get_chess_piece_color(chess_piece_char)?;
+        Ok(ChessPiece { piece_type, position, color })
+    }
+
+    pub fn is_black_piece(&self) -> bool{
+        match self.color {
+            ChessPieceColor::Black => true,
+            ChessPieceColor::White => false,
+        }
+    }
+
+    pub fn is_white_piece(&self) -> bool{
+        match self.color {
+            ChessPieceColor::White => true,
+            ChessPieceColor::Black => false,
+        }
     }
 
     pub fn can_capture(&self, another_piece: &ChessPiece) -> bool{
