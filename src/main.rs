@@ -1,6 +1,8 @@
 pub use ajedrez::ChessSyntaxValidator;
 pub use ajedrez::ChessBoardLoader;
 pub use ajedrez::ChessEngine;
+pub use ajedrez::chess_error::ChessError;
+pub use ajedrez::chess_error;
 
 
 fn main() {
@@ -15,6 +17,12 @@ fn main() {
 
     println!("{:?}", matrix);
 
-    ChessEngine::recreate_future_moves(&matrix);
+    // match ChessEngine::recreate_future_moves(&matrix){
+    //     Ok(_) => _,
+    //     ChessError => print!("Hola")
+    // } 
 
+    if let Err(error) = ChessEngine::recreate_future_moves(&matrix) {
+        chess_error::print_error_messages(error);
+    }
 }

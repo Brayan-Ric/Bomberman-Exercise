@@ -23,7 +23,7 @@ pub fn process_row<'a>(row: &'a String, i_row: usize, matrix:&mut [char; 64]){
 }
 
 
-pub fn recreate_future_moves(matrix:&[char; 64]) -> Result<bool, ChessError> {
+pub fn recreate_future_moves(matrix:&[char; 64]) -> Result<(), ChessError> {
     ChessSyntaxValidator::validate_board_pieces(matrix);
     // ChessSyntaxValidator::validate_number_of_pieces(matrix); validate_one_black_one_white hace los mismo y mejor
     ChessSyntaxValidator::validate_one_black_one_white(matrix);
@@ -33,7 +33,9 @@ pub fn recreate_future_moves(matrix:&[char; 64]) -> Result<bool, ChessError> {
     // let mut chess_pieces = find_chess_pieces(matrix);
     let (pieces1, pieces2) = get_chess_pieces(matrix)?;
     
-    Ok(true)
+    simulate_next_move(&pieces1, &pieces2);
+    // Ok(true)
+    Ok(())
 }
 
 
@@ -73,4 +75,19 @@ fn find_chess_pieces(matrix:&[char; 64]) -> HashMap<char, (usize, usize)> {
         i += 1;
     }
     chess_pieces
+}
+
+fn simulate_next_move(piece_1: &ChessPiece, piece_2: &ChessPiece){
+    let piece_1_can_capture = piece_1.can_capture(piece_2);
+    let piece_2_can_capture = piece_2.can_capture(piece_1);
+
+    if piece_1_can_capture && piece_2_can_capture {
+        println!("E");
+    }else if !piece_1_can_capture && !piece_2_can_capture {
+        println!("P");
+    } else if piece_1_can_capture {
+        println!("");
+    } else {
+        println!("");
+    }
 }
