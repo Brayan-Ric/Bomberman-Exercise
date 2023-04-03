@@ -1,94 +1,10 @@
 pub use super::chess_error::ChessError;
-
-
-enum ChessPieceType {
-    King,
-    Queen,
-    Rook,
-    Bishop,
-    Knight,
-    Pawn,
-}
-
+pub use super::chess_piece_type::ChessPieceType;
+pub use super::chess_piece_type;
+pub use super::chess_position::ChessPosition;
 enum ChessPieceColor {
     White,
     Black,
-}
-
-// pub enum ChessPieceError {
-//     InvalidPiece,
-// }
-
-pub struct ChessPosition {
-    row: usize,
-    column: usize,
-}
-
-impl ChessPosition {
-
-    pub fn is_adjacent(&self, another_position: &ChessPosition) -> bool{
-        let dx = (self.row as i32 - another_position.row as i32).abs();
-        let dy = (self.column as i32 - another_position.column as i32).abs();
-
-        dx <= 1 && dy <= 1 && !(dx == 0 && dy == 0)
-    }
-
-    pub fn are_aligned(&self, another_position: &ChessPosition) -> bool{
-        self.are_in_same_row_or_column(another_position) || self.are_in_diagonal(another_position)
-    }
-
-    pub fn are_in_same_row_or_column(&self, another_position: &ChessPosition) -> bool{
-        self.row == another_position.row || self.column == another_position.column
-    }
-
-    pub fn are_in_diagonal(&self, another_position: &ChessPosition) -> bool{
-        let dx = ((self.row as i32) - (another_position.row as i32)).abs();
-        let dy = ((self.column as i32) - (another_position.column as i32)).abs();
-        dx == dy
-    }
-
-    pub fn are_in_l(&self, another_position: &ChessPosition) -> bool{
-        let dx = (self.row as i32 - another_position.row as i32).abs();
-        let dy = (self.column as i32 - another_position.column as i32).abs();
-        (dx == 1 && dy == 2) || (dx == 2 && dy == 1)
-    }
-
-    pub fn are_diagonal_1(&self, another_position: &ChessPosition) -> bool{
-        let dx = (self.row as i32 - another_position.row as i32).abs();
-        let dy = (self.column as i32 - another_position.column as i32).abs();
-        dx == 1 && dy == 1
-    }
-
-    pub fn one_position_down_diagonal(&self, another_position: &ChessPosition) -> bool{
-        let dx = (self.row as i32) - (another_position.row as i32);
-        let dy = (self.column as i32) - (another_position.column as i32);
-        dx.abs() == 1 && dy.abs() == 1 && dy > 0
-    }
-
-    pub fn one_position_upward_diagonal(&self, another_position: &ChessPosition) -> bool{
-        let dx = (self.row as i32) - (another_position.row as i32);
-        let dy = (self.column as i32) - (another_position.column as i32);
-        dx.abs() == 1 && dy.abs() == 1 && dy < 0
-    }
-    
-}
-
-fn get_chess_piece_type(chess_piece_char: char) -> Result<ChessPieceType, ChessError> {
-    match chess_piece_char {
-        'R' => Ok(ChessPieceType::King),
-        'r' => Ok(ChessPieceType::King),
-        'D' => Ok(ChessPieceType::Queen),
-        'd' => Ok(ChessPieceType::Queen),
-        'C' => Ok(ChessPieceType::Knight),
-        'c' => Ok(ChessPieceType::Knight),
-        'A' => Ok(ChessPieceType::Bishop),
-        'a' => Ok(ChessPieceType::Bishop),
-        'T' => Ok(ChessPieceType::Rook),
-        't' => Ok(ChessPieceType::Rook),
-        'P' => Ok(ChessPieceType::Pawn),
-        'p' => Ok(ChessPieceType::Pawn),
-        _ => Err(ChessError::InvalidPiece),
-    }
 }
 
 fn get_chess_piece_color(chess_piece_char: char) -> Result<ChessPieceColor, ChessError> {
@@ -115,12 +31,10 @@ pub struct ChessPiece {
     color: ChessPieceColor,
 }
 
-
-
 impl ChessPiece {
     pub fn chess_piece_from(chess_piece_char: char, row: usize, column: usize) ->  Result<ChessPiece, ChessError>{
-        let piece_type = get_chess_piece_type(chess_piece_char)?;
-        let position = ChessPosition { row, column };
+        let piece_type = chess_piece_type::get_chess_piece_type(chess_piece_char)?;
+        let position = ChessPosition::create_position(row, column);
         let color = get_chess_piece_color(chess_piece_char)?;
         Ok(ChessPiece { piece_type, position, color })
     }
