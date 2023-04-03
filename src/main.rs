@@ -9,7 +9,7 @@ fn main() {
         Ok(path) => path,
         Err(error_type) => {
             chess_error::print_error_messages(error_type);
-            return ();
+            return ;
         }
     };
 
@@ -17,7 +17,7 @@ fn main() {
         Ok(file) => file,
         Err(error_type) => {
             chess_error::print_error_messages(error_type);
-            return ();
+            return ;
         }
     };
 
@@ -27,7 +27,7 @@ fn main() {
         Ok(()) => (),
         Err(error_type) => {
             chess_error::print_error_messages(error_type);
-            return ();
+            return ;
         }
     };
 

@@ -62,7 +62,7 @@ impl ChessPiece {
     }
 
     pub fn can_capture(&self, another_piece: &ChessPiece) -> bool {
-        self.capture(&another_piece)
+        self.capture(another_piece)
     }
 
     fn capture(&self, another_piece: &ChessPiece) -> bool {

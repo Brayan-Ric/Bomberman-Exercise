@@ -93,9 +93,7 @@ fn simulate_next_move(piece_1: &ChessPiece, piece_2: &ChessPiece) {
         println!("E");
     } else if !piece_1_can_capture && !piece_2_can_capture {
         println!("P");
-    } else if piece_1_can_capture && piece_1.is_white_piece() {
-        println!("B");
-    } else if piece_2_can_capture && piece_2.is_white_piece() {
+    } else if (piece_1_can_capture && piece_1.is_white_piece()) || (piece_2_can_capture && piece_2.is_white_piece()) {
         println!("B");
     } else {
         println!("N");
