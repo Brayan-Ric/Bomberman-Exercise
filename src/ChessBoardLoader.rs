@@ -17,10 +17,10 @@ pub fn command_reader() -> Result<String, ChessError>{
     return Ok(args.pop().unwrap());
 }
 
-pub fn open_file(file_name: &str) -> File{
+pub fn open_file(file_name: &str) -> Result<File, ChessError>{
     match File::open(file_name) {
-        Ok(file) => file,
-        _error => panic!("\n[Error: Archivo no encontrado]\n") 
+        Ok(file) => Ok(file),
+        _error => Err(ChessError::FileOpenError),
     }
 }
 
