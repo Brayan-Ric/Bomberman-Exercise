@@ -26,7 +26,6 @@ pub fn open_file(file_name: &str) -> Result<File, ChessError>{
 
 pub fn read_file(file: &File, matrix:&mut [char; 64]) -> Result<(), ChessError>{
     let buf_reader = BufReader::new(file);
-    println!("Contenido del Archivo");
 
     for (i, linea) in buf_reader.lines().enumerate() {
          match linea {
