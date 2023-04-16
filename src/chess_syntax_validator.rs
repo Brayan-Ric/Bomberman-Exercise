@@ -86,13 +86,12 @@ pub fn panic_syntax_chessboard(error: &str) {
     panic!("\nError: [{}.\nGuiese del siguiente ejemplo:\n{}\nPara mas detalles: https://taller-1-fiuba-rust.github.io/proyecto/23C1/ejercicio_individual.html]", error, DESCRIPTIVE_CHESSBOARD);
 }
 
-
 #[cfg(test)]
 pub mod test {
     use super::*;
-    
+
     #[test]
-    fn test_validate_argument_count_ok(){
+    fn test_validate_argument_count_ok() {
         let args = vec!["value_1".to_string(), "value_2".to_string()];
         let result = validate_argument_count(&args);
         assert!(match result {
@@ -102,14 +101,18 @@ pub mod test {
     }
 
     #[test]
-    fn test_validate_argument_count_error(){
-        let args = vec!["value_1".to_string(), "value_2".to_string(), "value_3".to_string()];
+    fn test_validate_argument_count_error() {
+        let args = vec![
+            "value_1".to_string(),
+            "value_2".to_string(),
+            "value_3".to_string(),
+        ];
         let result = validate_argument_count(&args);
         assert!(result.is_err());
     }
 
     #[test]
-    fn test_validate_row_length_ok(){
+    fn test_validate_row_length_ok() {
         let valid_row_format = "_ _ _ _ _ _ _ _".to_string();
         let result = validate_row_length(&valid_row_format);
         assert!(match result {
@@ -117,16 +120,16 @@ pub mod test {
             _ => false,
         });
     }
-    
+
     #[test]
-    fn test_validate_row_length_error(){
+    fn test_validate_row_length_error() {
         let invalid_row_format = "_ _ _ _".to_string();
         let result = validate_row_length(&invalid_row_format);
         assert!(result.is_err());
     }
 
     #[test]
-    fn test_validate_square_ok(){
+    fn test_validate_square_ok() {
         let valid_piece = 'P';
         let result = validate_square(&valid_piece);
         assert!(match result {
@@ -136,10 +139,9 @@ pub mod test {
     }
 
     #[test]
-    fn test_validate_square_error(){
+    fn test_validate_square_error() {
         let invalid_piece = '*';
         let result = validate_square(&invalid_piece);
         assert!(result.is_err());
     }
-    
 }

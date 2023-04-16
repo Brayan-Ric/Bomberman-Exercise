@@ -98,6 +98,14 @@ impl ChessPiece {
     }
 
     fn pawn_capture(&self, another_piece: &ChessPiece) -> bool {
-        self.position.are_diagonal_1(&another_piece.position)
+        match self.color {
+            ChessPieceColor::White => self
+                .position
+                .one_position_upward_diagonal(&another_piece.position),
+            ChessPieceColor::Black => self
+                .position
+                .one_position_down_diagonal(&another_piece.position),
+        }
+        // self.position.are_diagonal_1(&another_piece.position)one_position_down_diagonal
     }
 }
