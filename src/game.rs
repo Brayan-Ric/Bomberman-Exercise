@@ -5,13 +5,12 @@ use std::io::{BufWriter, Write};
 use std::rc::Rc;
 
 use crate::constants::EMPTY_SQUARE;
-use crate::coordinate::{Coordinate, self};
+use crate::coordinate::{self, Coordinate};
 use crate::file_io;
 use crate::item::Item;
 use crate::{config::Config, error::BombermanError};
 
 type Operacion = fn(&Coordinate) -> Coordinate;
-
 
 #[derive(Debug)]
 pub struct Game {
@@ -30,69 +29,17 @@ impl Game {
         })
     }
 
-    pub fn denotate_bomb(&mut self, x: u32, y:u32) -> Result<(), BombermanError> {
+    pub fn denotate_bomb(&mut self, x: u32, y: u32) -> Result<(), BombermanError> {
+        let map_rc = Rc::new(RefCell::new(&mut self.map));
         let bomb_detonate = Coordinate::new(x, y);
 
-        match self.map.get(&bomb_detonate) {
-            // Some(c) if Item::NormalBomb(range) => bomb_detonate.blast_area(range),
-           Some(Item::NormalBomb(range)) => {
-                // bomb_detonate.blast_area(*range),
-                self.normal_bomb_effect(&bomb_detonate, *range, coordinate::Coordinate::right);
-                self.normal_bomb_effect(&bomb_detonate, *range, coordinate::Coordinate::left);
-                self.normal_bomb_effect(&bomb_detonate, *range, coordinate::Coordinate::up);
-                self.normal_bomb_effect(&bomb_detonate, *range, coordinate::Coordinate::down);
-           }
-        // Some(Item::TransferBomb(range)) =>
-        //         bomb_detonate.blast_area(*range),
-           _ => return Err(BombermanError::InvalidBombCoordinate),
-       }
-       Ok(())
-    }
-
-    // pub fn _denotate_bomb(&mut self, x: u32, y:u32) -> Result<(), BombermanError> {
-    //     let bomb_detonate = Coordinate::new(x, y);
-
-    //     let shared_data = Rc::new(RefCell::new(self.map));
-
-    //     match self.map.get(&bomb_detonate) {
-    //         // Some(c) if Item::NormalBomb(range) => bomb_detonate.blast_area(range),
-    //        Some(Item::NormalBomb(range)) => {
-    //             // bomb_detonate.blast_area(*range),
-    //             self.normal_bomb_effect(&bomb_detonate, *range, coordinate::Coordinate::right);
-    //             self.normal_bomb_effect(&bomb_detonate, *range, coordinate::Coordinate::left);
-    //             self.normal_bomb_effect(&bomb_detonate, *range, coordinate::Coordinate::up);
-    //             self.normal_bomb_effect(&bomb_detonate, *range, coordinate::Coordinate::down);
-    //        }
-    //     // Some(Item::TransferBomb(range)) =>
-    //     //         bomb_detonate.blast_area(*range),
-    //        _ => return Err(BombermanError::InvalidBombCoordinate),
-    //    }
-    //    Ok(())
-    // }
-
-    pub fn normal_bomb_effect(&mut self, coordinate: &Coordinate, range: u32,f: Operacion) -> Result<(), BombermanError> {
-        match self.map.get(coordinate).unwrap_or(&Item::Empty) {
-            Item::Enemy(life) => {
-                if *life == 1 {
-                    self.map.remove(coordinate);
-                } else {
-                    self.map.insert(*coordinate.clone(), Item::Enemy(life - 1));
-                }
+        match map_rc.clone().borrow().get(&bomb_detonate) {
+            Some(Item::NormalBomb(range)) => {
+                detonate_explosion(map_rc.clone(), &bomb_detonate, *range);
+                return Ok(());
             }
-            Item::Deflection(_) => {
-                self.map.remove(coordinate);
-            }
-            Item::NormalBomb(_) => {
-                self.map.remove(coordinate);
-                self.denotate_bomb(coordinate.x, coordinate.y);
-            }
-            Item::TransferBomb(_) => {
-                self.map.remove(coordinate);
-                self.denotate_bomb(coordinate.x, coordinate.y);
-            }
-            _ => (),
-        };
-        self.normal_bomb_effect(&f(coordinate), range - 1, f)
+            _ => return Err(BombermanError::InvalidBombCoordinate),
+        }
     }
 
     pub fn save_game(&self, path: &String) -> Result<(), BombermanError> {
@@ -145,9 +92,59 @@ pub fn process_line(line: &String, row: usize, ptr: &mut dyn Any) -> Result<(), 
     Ok(())
 }
 
-fn validate_bomb(map: &HashMap<Coordinate, Item>, bomb_detonate: &Coordinate) -> bool {
-    match map.get(bomb_detonate) {
-        Some(&Item::NormalBomb(_)) | Some(&Item::TransferBomb(_)) => true,
-        _ => false,
+// fn validate_bomb(map: &HashMap<Coordinate, Item>, bomb_detonate: &Coordinate) -> bool {
+//     match map.get(bomb_detonate) {
+//         Some(&Item::NormalBomb(_)) | Some(&Item::TransferBomb(_)) => true,
+//         _ => false,
+//     }
+// }
+
+fn normal_bomb_effect(
+    map: &mut HashMap<Coordinate, Item>,
+    coordinate: &Coordinate,
+    f: Operacion,
+) -> Operacion {
+    match map.get(coordinate).unwrap_or(&Item::Empty) {
+        Item::Enemy(life) => {
+            if *life == 1 {
+                map.remove(coordinate);
+            } else {
+                map.insert(*coordinate, Item::Enemy(life - 1));
+            }
+        }
+        Item::Deflection(_) => {
+            map.remove(coordinate);
+        }
+        Item::NormalBomb(_) => {
+            map.remove(coordinate);
+            // denotate_bomb(coordinate.x, coordinate.y);
+        }
+        Item::TransferBomb(_) => {
+            map.remove(coordinate);
+            // denotate_bomb(coordinate.x, coordinate.y);
+        }
+        _ => (),
+    };
+    f
+}
+fn detonate_explosion(map: Rc<RefCell<&mut HashMap<Coordinate, Item>>>, coordinate: &Coordinate, range: u32) {
+    // let map_rc = Rc::new(RefCell::new(map));
+    let map_right = map.clone();
+    let map_left = map.clone();
+    let map_up = map.clone();
+    let map_down = map.clone();
+    _detonate_explosion(map_right, coordinate, range,coordinate::Coordinate::right);
+    _detonate_explosion(map_left, coordinate, range, coordinate::Coordinate::left);
+    _detonate_explosion(map_up, coordinate, range, coordinate::Coordinate::up);
+    _detonate_explosion(map_down, coordinate, range, coordinate::Coordinate::down);
+}
+
+fn _detonate_explosion(map: Rc<RefCell<&mut HashMap<Coordinate, Item>>>, coordinate: &Coordinate, range: u32,f: Operacion){
+    if range == 0 {
+        return;
     }
+    let mut map_2 = map.borrow_mut();
+    let coordinate = f(&coordinate);
+    let f = normal_bomb_effect(&mut map_2, &coordinate, f);
+    _detonate_explosion(map.clone(), &coordinate, range - 1,f);
 }

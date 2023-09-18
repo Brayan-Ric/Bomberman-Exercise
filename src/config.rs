@@ -5,7 +5,6 @@ use std::env;
 use crate::constants::*;
 use crate::error::BombermanError;
 
-
 /// Configuración para la ejecución del programa Bomberman.
 ///
 /// Esta estructura representa la configuración necesaria para ejecutar el programa Bomberman.

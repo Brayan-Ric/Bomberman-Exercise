@@ -51,7 +51,6 @@ pub enum Item {
 }
 
 impl Item {
-
     /// Crea un nuevo elemento `Item` a partir de una cadena de caracteres `s`.
     ///
     /// Esta función toma una cadena de caracteres `s` y la analiza para determinar qué tipo de elemento
@@ -236,27 +235,27 @@ fn get_address(s: &str, e: BombermanError) -> Result<char, BombermanError> {
 // /// assert_eq!(invalid_result, Err(BombermanError::InvalidEnemyFormat));
 // /// ```
 
-    // /// # Ejemplo
-    // ///
-    // /// ```
-    // /// use bomberman::{Item, BombermanError};
-    // ///
-    // /// // Crear un enemigo con 3 de vida.
-    // /// let enemy_result = Item::new("F3");
-    // /// assert_eq!(enemy_result, Ok(Item::Enemy(3)));
-    // ///
-    // /// // Crear una bomba normal con alcanze 5.
-    // /// let bomb_result = Item::new("B5");
-    // /// assert_eq!(bomb_result, Ok(Item::NormalBomb(5)));
-    // ///
-    // /// // Crear una casilla de pared.
-    // /// let wall_result = Item::new("W");
-    // /// assert_eq!(wall_result, Ok(Item::Wall));
-    // ///
-    // /// // Intentar crear un elemento no válido.
-    // /// let invalid_result = Item::new("X");
-    // /// assert_eq!(invalid_result, Err(BombermanError::InvalidItem));
-    // /// ```
+// /// # Ejemplo
+// ///
+// /// ```
+// /// use bomberman::{Item, BombermanError};
+// ///
+// /// // Crear un enemigo con 3 de vida.
+// /// let enemy_result = Item::new("F3");
+// /// assert_eq!(enemy_result, Ok(Item::Enemy(3)));
+// ///
+// /// // Crear una bomba normal con alcanze 5.
+// /// let bomb_result = Item::new("B5");
+// /// assert_eq!(bomb_result, Ok(Item::NormalBomb(5)));
+// ///
+// /// // Crear una casilla de pared.
+// /// let wall_result = Item::new("W");
+// /// assert_eq!(wall_result, Ok(Item::Wall));
+// ///
+// /// // Intentar crear un elemento no válido.
+// /// let invalid_result = Item::new("X");
+// /// assert_eq!(invalid_result, Err(BombermanError::InvalidItem));
+// /// ```
 
 // /// # Ejemplo
 // ///

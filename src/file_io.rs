@@ -7,7 +7,6 @@ use std::{
 use crate::error::BombermanError;
 type Operacion = fn(&String, usize, &mut dyn Any) -> Result<(), BombermanError>;
 
-
 /// Lee un archivo de entrada en la ruta especificada y aplica una operación personalizada
 /// a cada línea del archivo.
 ///
@@ -136,7 +135,7 @@ pub fn open_file_for_reading(path: &str) -> Result<File, BombermanError> {
 /// ```
 /// use std::fs::File;
 /// use bomberman::file_io::open_file_for_writing;
-/// 
+///
 /// let result = open_file_for_writing("output.txt");
 /// match result {
 ///     Ok(file) => {
