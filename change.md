@@ -11,3 +11,4 @@ Test unitarios:
             return None;
         } // Pensar en estos mas 1
 5) EL +1 en range es por detalles de implementacion, porque cuento desde donde estoy
+7) URGENTE: INVERTIR COORDENADAS X e Y en el input
