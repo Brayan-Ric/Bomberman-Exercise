@@ -30,7 +30,7 @@ impl Game {
     }
 
     pub fn denotate_bomb(&mut self, x: u32, y: u32) -> Result<(), BombermanError> {
-        let map_rc = Rc::new(RefCell::new(&mut self.map));
+        let map_rc = Rc::new(RefCell::new(self.map.clone()));
         let bomb_detonate = Coordinate::new(x, y);
 
         match map_rc.clone().borrow().get(&bomb_detonate) {
@@ -100,34 +100,42 @@ pub fn process_line(line: &String, row: usize, ptr: &mut dyn Any) -> Result<(), 
 // }
 
 fn normal_bomb_effect(
-    map: &mut HashMap<Coordinate, Item>,
+    map: Rc<RefCell<HashMap<Coordinate, Item>>>,
     coordinate: &Coordinate,
     f: Operacion,
 ) -> Operacion {
-    match map.get(coordinate).unwrap_or(&Item::Empty) {
+    // let map_2 = map.clone();
+    // let map_3 = map.clone();
+    // let mut map_3 = binding.borrow_mut();
+    // let mut map = binding.borrow_mut();
+    match map.clone().borrow().get(coordinate).unwrap_or(&Item::Empty) {
         Item::Enemy(life) => {
+            let map_3 = map.clone();
             if *life == 1 {
-                map.remove(coordinate);
+                map_3.borrow_mut().remove(coordinate);
             } else {
-                map.insert(*coordinate, Item::Enemy(life - 1));
+                map_3.borrow_mut().insert(*coordinate, Item::Enemy(life - 1));
             }
         }
         Item::Deflection(_) => {
-            map.remove(coordinate);
+            let map_3 = map.clone();
+            map_3.borrow_mut().remove(coordinate);
         }
         Item::NormalBomb(_) => {
-            map.remove(coordinate);
+            let map_3 = map.clone();
+            map_3.borrow_mut().remove(coordinate);
             // denotate_bomb(coordinate.x, coordinate.y);
         }
         Item::TransferBomb(_) => {
-            map.remove(coordinate);
+            let map_3 = map.clone();
+            map_3.borrow_mut().remove(coordinate);
             // denotate_bomb(coordinate.x, coordinate.y);
         }
         _ => (),
     };
     f
 }
-fn detonate_explosion(map: Rc<RefCell<&mut HashMap<Coordinate, Item>>>, coordinate: &Coordinate, range: u32) {
+fn detonate_explosion(map: Rc<RefCell<HashMap<Coordinate, Item>>>, coordinate: &Coordinate, range: u32) {
     // let map_rc = Rc::new(RefCell::new(map));
     let map_right = map.clone();
     let map_left = map.clone();
@@ -139,12 +147,11 @@ fn detonate_explosion(map: Rc<RefCell<&mut HashMap<Coordinate, Item>>>, coordina
     _detonate_explosion(map_down, coordinate, range, coordinate::Coordinate::down);
 }
 
-fn _detonate_explosion(map: Rc<RefCell<&mut HashMap<Coordinate, Item>>>, coordinate: &Coordinate, range: u32,f: Operacion){
+fn _detonate_explosion(map: Rc<RefCell<HashMap<Coordinate, Item>>>, coordinate: &Coordinate, range: u32,f: Operacion){
     if range == 0 {
         return;
     }
-    let mut map_2 = map.borrow_mut();
     let coordinate = f(&coordinate);
-    let f = normal_bomb_effect(&mut map_2, &coordinate, f);
+    let f = normal_bomb_effect(map.clone(), &coordinate, f);
     _detonate_explosion(map.clone(), &coordinate, range - 1,f);
 }

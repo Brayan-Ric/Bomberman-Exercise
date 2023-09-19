@@ -1,4 +1,4 @@
-use crate::error::BombermanError;
+use crate::{error::BombermanError, constants::{ENEMY, NORMAL_BOMB, TRANSFER_BOMB, DEFLECTION, WALL, ROCK, RIGHT, LEFT, DOWN, UP}};
 
 /// Representa los elementos en el mundo del juego Bomberman.
 ///
@@ -16,19 +16,6 @@ use crate::error::BombermanError;
 /// - `Deflection(char)`: Representa un elemento de desviación con una dirección especificada (carácter).
 /// - `Empty`: Representa una casilla vacía sin ningún elemento.
 ///
-/// # Ejemplo
-///
-/// ```
-/// use bomberman::Item;
-///
-/// let enemy = Item::Enemy(3);
-/// let bomb = Item::NormalBomb(5);
-/// let rock = Item::Rock;
-/// let empty = Item::Empty;
-///
-/// // Realice operaciones y comparaciones con elementos del juego.
-/// ```
-///
 /// # Importación
 ///
 /// Debe tener acceso al enum `Item` definido en su proyecto para utilizar esta estructura de datos.
@@ -39,7 +26,7 @@ use crate::error::BombermanError;
 /// https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html
 ///
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub enum Item {
     Enemy(u32),
     NormalBomb(u32),
@@ -90,8 +77,8 @@ impl Item {
 
         if s.len() == 1 {
             match s {
-                "W" => return Ok(Item::Wall),
-                "R" => return Ok(Item::Rock),
+                WALL => return Ok(Item::Wall),
+                ROCK => return Ok(Item::Rock),
                 _ => return Err(BombermanError::InvalidItem),
             }
         }
@@ -102,19 +89,19 @@ impl Item {
         };
 
         match item {
-            'F' => Ok(Item::Enemy(get_value(
+            ENEMY => Ok(Item::Enemy(get_value(
                 s,
                 BombermanError::InvalidEnemyFormat,
             )?)),
-            'B' => Ok(Item::NormalBomb(get_value(
+            NORMAL_BOMB => Ok(Item::NormalBomb(get_value(
                 s,
                 BombermanError::InvalidNormalBombFormat,
             )?)),
-            'S' => Ok(Item::TransferBomb(get_value(
+            TRANSFER_BOMB => Ok(Item::TransferBomb(get_value(
                 s,
                 BombermanError::InvalidTransferBombFormat,
             )?)),
-            'D' => Ok(Item::Deflection(get_address(
+            DEFLECTION => Ok(Item::Deflection(get_address(
                 s,
                 BombermanError::InvalidDeflectionFormat,
             )?)),
@@ -126,20 +113,6 @@ impl Item {
 /// Implementación de la forma de mostrar (`std::fmt::Display`) para el enum `Item`.
 ///
 /// Esta implementación permite mostrar un valor de tipo `Item` como una cadena de caracteres.
-///
-/// # Ejemplo
-///
-/// ```
-/// use bomberman::Item;
-///
-/// let enemy = Item::Enemy(3);
-/// let bomb = Item::NormalBomb(5);
-/// let rock = Item::Rock;
-///
-/// println!("Enemy: {}", enemy);     // Muestra: "Enemy: F3"
-/// println!("Bomb: {}", bomb);       // Muestra: "Bomb: B5"
-/// println!("Rock: {}", rock);       // Muestra: "Rock: R"
-/// ```
 ///
 /// # Nota
 ///
@@ -216,55 +189,102 @@ fn get_address(s: &str, e: BombermanError) -> Result<char, BombermanError> {
     }
 
     match s.chars().nth(1) {
-        Some(c) if c == 'A' || c == 'B' || c == 'U' || c == 'P' => Ok(c),
+        Some(c) if c == RIGHT || c == LEFT || c == DOWN || c == UP => Ok(c),
         _ => Err(e),
     }
 }
 
-// /// # Ejemplo
-// ///
-// /// ```
-// /// use bomberman::{get_value, BombermanError};
-// ///
-// /// // Obtener el valor 3 de la cadena "F3".
-// /// let value_result = get_value("F3", BombermanError::InvalidEnemyFormat);
-// /// assert_eq!(value_result, Ok(3));
-// ///
-// /// // Intentar obtener un valor de una cadena no válida.
-// /// let invalid_result = get_value("X", BombermanError::InvalidEnemyFormat);
-// /// assert_eq!(invalid_result, Err(BombermanError::InvalidEnemyFormat));
-// /// ```
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-// /// # Ejemplo
-// ///
-// /// ```
-// /// use bomberman::{Item, BombermanError};
-// ///
-// /// // Crear un enemigo con 3 de vida.
-// /// let enemy_result = Item::new("F3");
-// /// assert_eq!(enemy_result, Ok(Item::Enemy(3)));
-// ///
-// /// // Crear una bomba normal con alcanze 5.
-// /// let bomb_result = Item::new("B5");
-// /// assert_eq!(bomb_result, Ok(Item::NormalBomb(5)));
-// ///
-// /// // Crear una casilla de pared.
-// /// let wall_result = Item::new("W");
-// /// assert_eq!(wall_result, Ok(Item::Wall));
-// ///
-// /// // Intentar crear un elemento no válido.
-// /// let invalid_result = Item::new("X");
-// /// assert_eq!(invalid_result, Err(BombermanError::InvalidItem));
-// /// ```
+    #[test]
+    fn test_get_address_valid_l() {
+        assert_eq!(get_address("XL", BombermanError::InvalidDeflectionFormat), Ok(LEFT));
+    }
 
-// /// # Ejemplo
-// ///
-// /// ```
-// /// use bomberman::{get_address, BombermanError};
-// ///
-// /// let address = get_address("DX", BombermanError::InvalidDeflectionFormat);
-// /// assert_eq!(address, Ok('X'));
-// ///
-// /// let invalid_address = get_address("R", BombermanError::InvalidDeflectionFormat);
-// /// assert_eq!(invalid_address, Err(BombermanError::InvalidDeflectionFormat));
-// /// ```
+    #[test]
+    fn test_get_address_valid_r() {
+        assert_eq!(get_address("XR", BombermanError::InvalidDeflectionFormat), Ok(RIGHT));
+    }
+
+    #[test]
+    fn test_get_address_valid_u() {
+        assert_eq!(get_address("XU", BombermanError::InvalidDeflectionFormat), Ok(UP));
+    }
+
+    #[test]
+    fn test_get_address_valid_d() {
+        assert_eq!(get_address("XD", BombermanError::InvalidDeflectionFormat), Ok(DOWN));
+    }
+
+    #[test]
+    fn test_get_address_invalid() {
+        assert!(get_address("X", BombermanError::InvalidDeflectionFormat).is_err());
+    }
+
+    #[test]
+    fn test_get_value_valid_enemy() {
+        assert_eq!(get_value("F10", BombermanError::InvalidEnemyFormat), Ok(10));
+    }
+
+    #[test]
+    fn test_get_value_valid_bomb_normal() {
+        assert_eq!(get_value("B11", BombermanError::InvalidNormalBombFormat), Ok(11));
+    }
+
+    #[test]
+    fn test_get_value_valid_bomb_transfer() {
+        assert_eq!(get_value("S22", BombermanError::InvalidTransferBombFormat), Ok(22));
+    }
+
+    #[test]
+    fn test_get_value_invalid() {
+        assert!(get_value("FXYZ", BombermanError::InvalidEnemyFormat).is_err());
+    }
+    #[test]
+    fn test_new_item_enemy() {
+        assert_eq!(Item::new("F123"), Ok(Item::Enemy(123)));
+    }
+
+    #[test]
+    fn test_new_item_normal_bomb() {
+        assert_eq!(Item::new("B10"), Ok(Item::NormalBomb(10)));
+    }
+
+    #[test]
+    fn test_new_item_transfer_bomb() {
+        assert_eq!(Item::new("S11"), Ok(Item::TransferBomb(11)));
+    }
+
+    #[test]
+    fn test_new_item_deflection() {
+        assert_eq!(Item::new("DD"), Ok(Item::Deflection(DOWN)));
+    }
+
+    #[test]
+    fn test_new_item_wall() {
+        assert_eq!(Item::new("W"), Ok(Item::Wall));
+    }
+
+    #[test]
+    fn test_new_item_rock() {
+        assert_eq!(Item::new("R"), Ok(Item::Rock));
+    }
+
+    #[test]
+    fn test_new_item_invalid_1() {
+        assert_eq!(Item::new("X"), Err(BombermanError::InvalidItem));
+    }
+
+    #[test]
+    fn test_new_item_invalid_2() {
+        assert_eq!(Item::new(""), Err(BombermanError::InvalidItem));
+    }
+
+    #[test]
+    fn test_new_item_invalid_3() {
+        assert_eq!(Item::new("C183"), Err(BombermanError::InvalidItem));
+    }
+}
+

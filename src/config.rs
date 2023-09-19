@@ -16,19 +16,6 @@ use crate::error::BombermanError;
 /// * `x`: Coordenada X de la primera bomba a detonar.
 /// * `y`: Coordenada Y de la primera bomba a detonar.
 ///
-/// # Ejemplo
-///
-/// ```
-/// use bomberman::Config;
-///
-/// let config = Config {
-///     name_input: String::from("map.txt"),
-///     path_output: String::from("/path/to/output_dir/"),
-///     x: 5,
-///     y: 7,
-/// };
-/// ```
-///
 /// Esta estructura encapsula la configuración necesaria para la ejecución de Bomberman, incluyendo
 /// el nombre del archivo de entrada, la ruta de la carpeta de salida y las coordenadas de la
 /// primera bomba a detonar.
@@ -38,6 +25,7 @@ use crate::error::BombermanError;
 /// Asegúrate de proporcionar valores válidos para los campos `x` y `y` que estén dentro de los
 /// límites del mapa del juego.
 ///
+#[derive(Debug)]
 pub struct Config {
     pub name_input: String,
     pub path_output: String,
@@ -61,18 +49,6 @@ impl Config {
     ///
     /// Esta función devuelve un resultado que indica si la creación de la configuración fue exitosa o
     /// si hubo errores en los argumentos de entrada.
-    ///
-    // /// # Ejemplo// CHANGE THIS
-    // ///
-    // /// ```
-    // /// use bomberman::{Config, BombermanError};
-    // ///
-    // /// fn main() -> Result<(), BombermanError> {
-    // ///     let config = Config::new()?;
-    // ///     // Resto de la lógica del juego aquí...
-    // ///     Ok(())
-    // /// }
-    // /// ```
     ///
     /// # Notas
     ///
@@ -125,16 +101,22 @@ fn get_coordinate(s: &String) -> Result<usize, BombermanError> {
     }
 }
 
-// ///
-// /// # Ejemplo
-// ///
-// /// ```
-// /// use bomberman::config::get_coordinate;
-// /// {get_coordinate, BombermanError};
-// ///
-// /// fn main() -> Result<(), BombermanError> {
-// ///     let coordinate = get_coordinate("42")?;
-// ///     // Resto de la lógica del juego aquí...
-// ///     Ok(())
-// /// }
-// /// ```
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_valid_coordinate() {
+        let input = "10".to_string();
+        let result = get_coordinate(&input);
+        assert_eq!(result, Ok(10));
+    }
+
+    #[test]
+    fn test_invalid_coordinate() {
+        let input = "abc".to_string();
+        let result = get_coordinate(&input);
+        assert_eq!(result, Err(BombermanError::InvalidCoordinate));
+    }
+}

@@ -13,11 +13,6 @@ type Operacion = fn(&String, usize, &mut dyn Any) -> Result<(), BombermanError>;
 /// Esta función toma tres argumentos: una referencia a una cadena de texto `path` que
 /// representa la ruta del archivo de entrada, una función de operación personalizada `process`
 /// que se aplicará a cada línea del archivo, y un puntero mutable a un objeto dinámico `ptr`.
-/// La función `process` debe tener la siguiente firma:
-///
-/// ```
-/// fn process(line: &str, row: usize, ptr: &mut dyn Any) -> Result<(), BombermanError>;
-/// ```
 ///
 /// Donde `line` es la línea actual del archivo, `row` es el número de fila actual y `ptr`
 /// es un puntero mutable al objeto dinámico que se puede utilizar para almacenar resultados
@@ -74,23 +69,6 @@ pub fn read_input(
 /// en caso de éxito o un error personalizado (`BombermanError::InputPathError`) en caso
 /// de fallo.
 ///
-/// # Ejemplo
-///
-/// ```
-/// use std::fs::File;
-/// use bomberman::file_io::open_file_for_reading;
-///
-/// let result = open_file_for_reading("input.txt");
-/// match result {
-///     Ok(file) => {
-///         // Operaciones de lectura en el archivo.
-///     },
-///     Err(error) => {
-///         println!("Error al abrir el archivo: {}", error.message());
-///     }
-/// }
-/// ```
-///
 /// # Errores
 ///
 /// Esta función puede devolver un error personalizado `BombermanError::InputPathError` si no
@@ -130,23 +108,6 @@ pub fn open_file_for_reading(path: &str) -> Result<File, BombermanError> {
 /// y devuelve un resultado (`Result`) que contiene un archivo (`File`) en caso de éxito
 /// o un error personalizado (`BombermanError::OutputPathError`) en caso de fallo.
 ///
-/// # Ejemplo
-///
-/// ```
-/// use std::fs::File;
-/// use bomberman::file_io::open_file_for_writing;
-///
-/// let result = open_file_for_writing("output.txt");
-/// match result {
-///     Ok(file) => {
-///         // Operaciones de escritura en el archivo.
-///     },
-///     Err(error) => {
-///         println!("Error al abrir el archivo: {}", error.message());
-///     }
-/// }
-/// ```
-///
 /// # Errores
 ///
 /// Esta función puede devolver un error personalizado `BombermanError::OutputPathError`
@@ -179,3 +140,28 @@ pub fn open_file_for_writing(path: &str) -> Result<File, BombermanError> {
         Err(_) => Err(BombermanError::OutputPathError),
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_open_file_for_reading_file_not_found() {
+        let file_path = "archivo_que_no_existe.txt";
+        let result = open_file_for_reading(file_path);
+        assert_eq!(result.unwrap_err(), BombermanError::InputPathError);
+    }
+
+    #[test]
+    fn test_open_file_for_writing_file_not_found() {
+        let file_path = "path_no_existe/archivo_que_no_existe.txt";
+        let result = open_file_for_writing(file_path);
+        assert_eq!(result.unwrap_err(), BombermanError::OutputPathError);
+    }
+}
+
+
+
+
+

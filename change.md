@@ -1,0 +1,6 @@
+1) La dimension de la matriz ahora es constante
+2) Imprimo un espacio de mas al final de la matriz
+
+Test unitarios:
+    - Config
+    - Item
