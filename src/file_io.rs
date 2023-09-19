@@ -144,6 +144,8 @@ pub fn open_file_for_writing(path: &str) -> Result<File, BombermanError> {
 
 #[cfg(test)]
 mod tests {
+    use crate::game::process_line;
+
     use super::*;
 
     #[test]
@@ -158,6 +160,14 @@ mod tests {
         let file_path = "path_no_existe/archivo_que_no_existe.txt";
         let result = open_file_for_writing(file_path);
         assert_eq!(result.unwrap_err(), BombermanError::OutputPathError);
+    }
+
+    #[test]
+    fn test_read_input_not_found() {
+        let path = "archivo_que_no_existe.txt".to_string();
+        let mut ptr = "ptr".to_string();
+        let result = read_input(&path, process_line, &mut ptr);
+        assert_eq!(result.unwrap_err(), BombermanError::InputPathError);
     }
 }
 
