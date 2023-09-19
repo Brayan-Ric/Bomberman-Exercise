@@ -1,4 +1,0 @@
-R F1 R _
-F1 _ F1 _
-R B2 DU F1
-F1 F1 F2 W
