@@ -37,3 +37,22 @@ impl Coordinate {
         Some(Coordinate::new(self.x, self.y - 1, self.max_value))
     }
 }
+
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+
+//     #[test]
+//     fn test_down_within_bounds() {
+//         let coordinate = Coordinate::new(2, 3, 4);
+//         let result = coordinate.down();
+//         assert_eq!(result, Some(Coordinate::new(3, 3, 4)));
+//     }
+
+//     #[test]
+//     fn test_down_at_max_value() {
+//         let coordinate = Coordinate::new(4, 3, 4);
+//         let result = coordinate.down();
+//         assert_eq!(result, None);
+//     }
+// }

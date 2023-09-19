@@ -21,7 +21,7 @@ pub struct Game {
 impl Game {
     pub fn new(conf: &Config) -> Result<Game, BombermanError> {
         let mut map: HashMap<Coordinate, Item> = HashMap::new();
-        let map_dimension = match file_io::get_matrix_dimensions(&conf.name_input) {
+        let map_dimension = match file_io::get_matrix_dimensions(&conf.name_input)? {
             Some(dimension) => dimension as u32,
             None => return Err(BombermanError::NonSquareBoardError),
         };
@@ -79,6 +79,9 @@ impl Game {
                 let key = Coordinate::new(x, y, self.map_dimension);
                 let value = self.map.get(&key).unwrap_or(&Item::Empty);
                 write_item(&mut writer, value)?;
+                if y != self.map_dimension - 1 {
+                    let _ = writer.write_all(b" ");
+                }
             }
             let _ = writer.write_all(b"\n");
         }
@@ -87,7 +90,7 @@ impl Game {
 }
 
 fn write_item(writer: &mut BufWriter<std::fs::File>, value: &Item) -> Result<(), BombermanError> {
-    match writer.write_all(format!("{} ", value).as_bytes()) {
+    match writer.write_all(format!("{}", value).as_bytes()) {
         Ok(_) => (),
         Err(_) => return Err(BombermanError::Write),
     };

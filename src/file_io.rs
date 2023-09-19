@@ -63,14 +63,12 @@ pub fn read_input(
     }
     Ok(())
 }
-pub fn get_matrix_dimensions(path: &str) -> Option<usize> {
-    let file = match open_file_for_reading(path) {
-        Ok(f) => f,
-        Err(_) => return None,
-    };
+pub fn get_matrix_dimensions(path: &str) -> Result<Option<usize>, BombermanError> {
+    let file = open_file_for_reading(path)?;
     let mut reader: BufReader<File> = BufReader::new(file);
     let mut line = String::new();
     let mut expected_columns: Option<usize> = None;
+    let mut row: usize = 0;
 
     while let Ok(bytes_read) = reader.read_line(&mut line) {
         if bytes_read == 0 {
@@ -82,14 +80,18 @@ pub fn get_matrix_dimensions(path: &str) -> Option<usize> {
         // Verificar si este es el primer renglón para establecer el número esperado de columnas
         if let Some(expected) = expected_columns {
             if columns.len() != expected {
-                return None;
+                return Ok(None);
             }
         } else {
             expected_columns = Some(columns.len());
         }
+        row += 1;
         line.clear();
     }
-    expected_columns
+    if row != expected_columns.unwrap() {
+        return Err(BombermanError::NonSquareBoardError);
+    }
+    Ok(expected_columns)
 }
 
 /// Abre un archivo en modo de lectura en la ruta especificada.
@@ -197,5 +199,19 @@ mod tests {
         let mut ptr = "ptr".to_string();
         let result = read_input(&path, 0, process_line, &mut ptr);
         assert_eq!(result.unwrap_err(), BombermanError::InputPathError);
+    }
+
+    #[test]
+    fn test_get_matrix_dimensions_not_found() {
+        let file_path = "archivo_que_no_existe.txt";
+        let result = get_matrix_dimensions(file_path);
+        assert_eq!(result.unwrap_err(), BombermanError::InputPathError);
+    }
+
+    #[test]
+    fn test_get_matrix_dimensions_non_square() {
+        let file_path = "./tests/inputs/non_square_matrix.txt";
+        let result = get_matrix_dimensions(file_path);
+        assert_eq!(result.unwrap_err(), BombermanError::NonSquareBoardError);
     }
 }

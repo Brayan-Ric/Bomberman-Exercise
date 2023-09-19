@@ -1,0 +1,1 @@
+Error: El tablero no es cuadrado

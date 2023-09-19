@@ -1,3 +1,5 @@
+use std::{fs::File, io::Write};
+
 #[derive(Debug, PartialEq)]
 pub enum BombermanError {
     InvalidCoordinate,
@@ -57,6 +59,22 @@ impl BombermanError {
             BombermanError::NonSquareBoardError => {
                 "El tablero no es cuadrado"
             }
+        }
+    }
+
+    pub fn send(&self, path_output: String) {
+        let error = format!("Error: {}", self.message());
+
+        let mut file = match File::create(path_output) {
+            Ok(file) => file,
+            Err(_) => {
+                println!("{}", error);
+                return;
+            }
+        };
+        match file.write_all(error.as_bytes()) {
+            Ok(_) => (),
+            Err(_) => println!("{}", error),
         }
     }
 }

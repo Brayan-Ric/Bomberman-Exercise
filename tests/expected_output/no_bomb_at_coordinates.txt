@@ -1,0 +1,1 @@
+Error: En la coordenada proporcionada no se encontro una bomba
