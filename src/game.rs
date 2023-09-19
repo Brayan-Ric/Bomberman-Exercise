@@ -237,9 +237,34 @@ fn expansive_wave(
     }
     *affected.entry(*coordinate).or_insert(0) += 1;
 
-    // if !detonated_bombs.contains(coordinate) {
-    //     return;
-    // }
+    match map.get(coordinate).unwrap_or(&Item::Empty) {
+        Item::NormalBomb(r) => {
+            if !detonated_bombs.contains(coordinate) {
+                detonate_explosion(
+                    map,
+                    affected,
+                    coordinate,
+                    *r,
+                    detonated_bombs,
+                    normal_bomb_effect,
+                );
+            };
+        }
+        Item::TransferBomb(r) => {
+            if !detonated_bombs.contains(coordinate) {
+                detonate_explosion(
+                    map,
+                    affected,
+                    coordinate,
+                    *r,
+                    detonated_bombs,
+                    normal_transfer_effect,
+                );
+            };
+        }
+        _ => (),
+    };
+
     let f = match g(map, coordinate, f) {
         Some(f) => f,
         None => return,
