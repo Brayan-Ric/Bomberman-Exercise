@@ -5,7 +5,7 @@ use std::{
 };
 
 use crate::error::BombermanError;
-type Operacion = fn(&String, usize, u32, &mut dyn Any) -> Result<(), BombermanError>;
+type Operacion = fn(&str, usize, u32, &mut dyn Any) -> Result<(), BombermanError>;
 
 /// Lee un archivo de entrada en la ruta especificada y aplica una operación personalizada
 /// a cada línea del archivo.

@@ -107,7 +107,7 @@ fn process_generic_ptr(
 }
 
 pub fn process_line(
-    line: &String,
+    line: &str,
     row: usize,
     max_value: u32,
     ptr: &mut dyn Any,
