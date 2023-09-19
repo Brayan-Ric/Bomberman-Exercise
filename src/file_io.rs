@@ -5,7 +5,8 @@ use std::{
 };
 
 use crate::error::BombermanError;
-type Operacion = fn(&String, usize, &mut dyn Any) -> Result<(), BombermanError>;
+type Operacion = fn(&String, usize, u32, &mut dyn Any) -> Result<(), BombermanError>;
+// pub fn process_line(line: &String, row: usize, max_value: u32,ptr: &mut dyn Any) -> Result<(), BombermanError> {
 
 /// Lee un archivo de entrada en la ruta especificada y aplica una operación personalizada
 /// a cada línea del archivo.
@@ -43,6 +44,7 @@ type Operacion = fn(&String, usize, &mut dyn Any) -> Result<(), BombermanError>;
 ///
 pub fn read_input(
     path: &String,
+    max_value: u32,
     process: Operacion,
     ptr: &mut dyn Any,
 ) -> Result<(), BombermanError> {
@@ -55,11 +57,39 @@ pub fn read_input(
         if bytes_read == 0 {
             break; // Fin del archivo
         }
-        process(&line, row, ptr)?;
+        process(&line, row, max_value, ptr)?;
         row += 1;
         line.clear();
     }
     Ok(())
+}
+pub fn get_matrix_dimensions(path: &String) -> Option<usize> {
+    let file = match open_file_for_reading(path) {
+        Ok(f) => f,
+        Err(_) => return None,
+    };
+    let mut reader: BufReader<File> = BufReader::new(file);
+    let mut line = String::new();
+    let mut expected_columns: Option<usize> = None;
+
+    while let Ok(bytes_read) = reader.read_line(&mut line) {
+        if bytes_read == 0 {
+            break; // Fin del archivo
+        }
+
+        let columns: Vec<&str> = line.split_whitespace().collect();
+
+        // Verificar si este es el primer renglón para establecer el número esperado de columnas
+        if let Some(expected) = expected_columns {
+            if columns.len() != expected {
+                return None;
+            }
+        } else {
+            expected_columns = Some(columns.len());
+        }
+        line.clear();
+    }
+    expected_columns
 }
 
 /// Abre un archivo en modo de lectura en la ruta especificada.
@@ -141,7 +171,6 @@ pub fn open_file_for_writing(path: &str) -> Result<File, BombermanError> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::game::process_line;
@@ -166,12 +195,7 @@ mod tests {
     fn test_read_input_not_found() {
         let path = "archivo_que_no_existe.txt".to_string();
         let mut ptr = "ptr".to_string();
-        let result = read_input(&path, process_line, &mut ptr);
+        let result = read_input(&path, 0, process_line, &mut ptr);
         assert_eq!(result.unwrap_err(), BombermanError::InputPathError);
     }
 }
-
-
-
-
-

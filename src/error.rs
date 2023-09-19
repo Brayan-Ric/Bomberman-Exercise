@@ -12,6 +12,7 @@ pub enum BombermanError {
     InvalidBombCoordinate,
     OutputPathError,
     Write,
+    NonSquareBoardError,
 }
 
 impl BombermanError {
@@ -45,13 +46,16 @@ impl BombermanError {
                 "No se cumple el formato del item Desvio, use: DX con X una direccion valida (L, R, U, D)"
             }
             BombermanError::InvalidBombCoordinate => {
-                "En la coordenada proporcionada no se encontro unaº bomba"
+                "En la coordenada proporcionada no se encontro una bomba"
             }
             BombermanError::OutputPathError => {
                 "El archivo output no se pudo crear"
             }
             BombermanError::Write => {
                 "No se pudo escribir en el archivo output"
+            }
+            BombermanError::NonSquareBoardError => {
+                "El tablero no es cuadrado"
             }
         }
     }

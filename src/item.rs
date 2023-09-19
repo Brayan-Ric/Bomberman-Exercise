@@ -1,4 +1,7 @@
-use crate::{error::BombermanError, constants::{ENEMY, NORMAL_BOMB, TRANSFER_BOMB, DEFLECTION, WALL, ROCK, RIGHT, LEFT, DOWN, UP}};
+use crate::{
+    constants::{DEFLECTION, DOWN, ENEMY, LEFT, NORMAL_BOMB, RIGHT, ROCK, TRANSFER_BOMB, UP, WALL},
+    error::BombermanError,
+};
 
 /// Representa los elementos en el mundo del juego Bomberman.
 ///
@@ -200,22 +203,34 @@ mod tests {
 
     #[test]
     fn test_get_address_valid_l() {
-        assert_eq!(get_address("XL", BombermanError::InvalidDeflectionFormat), Ok(LEFT));
+        assert_eq!(
+            get_address("XL", BombermanError::InvalidDeflectionFormat),
+            Ok(LEFT)
+        );
     }
 
     #[test]
     fn test_get_address_valid_r() {
-        assert_eq!(get_address("XR", BombermanError::InvalidDeflectionFormat), Ok(RIGHT));
+        assert_eq!(
+            get_address("XR", BombermanError::InvalidDeflectionFormat),
+            Ok(RIGHT)
+        );
     }
 
     #[test]
     fn test_get_address_valid_u() {
-        assert_eq!(get_address("XU", BombermanError::InvalidDeflectionFormat), Ok(UP));
+        assert_eq!(
+            get_address("XU", BombermanError::InvalidDeflectionFormat),
+            Ok(UP)
+        );
     }
 
     #[test]
     fn test_get_address_valid_d() {
-        assert_eq!(get_address("XD", BombermanError::InvalidDeflectionFormat), Ok(DOWN));
+        assert_eq!(
+            get_address("XD", BombermanError::InvalidDeflectionFormat),
+            Ok(DOWN)
+        );
     }
 
     #[test]
@@ -230,12 +245,18 @@ mod tests {
 
     #[test]
     fn test_get_value_valid_bomb_normal() {
-        assert_eq!(get_value("B11", BombermanError::InvalidNormalBombFormat), Ok(11));
+        assert_eq!(
+            get_value("B11", BombermanError::InvalidNormalBombFormat),
+            Ok(11)
+        );
     }
 
     #[test]
     fn test_get_value_valid_bomb_transfer() {
-        assert_eq!(get_value("S22", BombermanError::InvalidTransferBombFormat), Ok(22));
+        assert_eq!(
+            get_value("S22", BombermanError::InvalidTransferBombFormat),
+            Ok(22)
+        );
     }
 
     #[test]
@@ -287,4 +308,3 @@ mod tests {
         assert_eq!(Item::new("C183"), Err(BombermanError::InvalidItem));
     }
 }
-

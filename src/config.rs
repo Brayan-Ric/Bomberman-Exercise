@@ -101,7 +101,6 @@ fn get_coordinate(s: &String) -> Result<usize, BombermanError> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
