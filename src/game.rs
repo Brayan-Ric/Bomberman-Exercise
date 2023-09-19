@@ -39,10 +39,10 @@ impl Game {
 
         let affected = match self.map.get(&bomb_detonate) {
             Some(Item::NormalBomb(range)) => {
-                detonate_explosion(&self.map, &bomb_detonate, *range, normal_bomb_effect)
+                detonate_explosion_2(&self.map, &bomb_detonate, *range, normal_bomb_effect)
             }
             Some(Item::TransferBomb(range)) => {
-                detonate_explosion(&self.map, &bomb_detonate, *range, normal_transfer_effect)
+                detonate_explosion_2(&self.map, &bomb_detonate, *range, normal_transfer_effect)
             }
             _ => return Err(BombermanError::InvalidBombCoordinate),
         };
@@ -97,7 +97,6 @@ fn write_item(writer: &mut BufWriter<std::fs::File>, value: &Item) -> Result<(),
     }
 }
 
-// "B2 R R _ F1 _ _" -> [B2, R, R, _, F1, _, _]
 fn process_generic_ptr(
     ptr: &mut dyn Any,
 ) -> Result<&mut HashMap<Coordinate, Item>, BombermanError> {
@@ -158,61 +157,70 @@ fn normal_transfer_effect(
         _ => Some(f),
     }
 }
-// fn detonate_explosion_2(
-//     map: &HashMap<Coordinate, Item>,
-//     bomb: &Coordinate,
-//     range: u32,
-//     g: Expansion,
-// ) -> HashMap<Coordinate, u32>
-// {
-//     let mut detonated_bombs:HashSet<Coordinate> = HashSet::new();
-//     // detonate_explosion
-// }
-
-fn detonate_explosion(
+fn detonate_explosion_2(
     map: &HashMap<Coordinate, Item>,
     bomb: &Coordinate,
     range: u32,
     g: Expansion,
 ) -> HashMap<Coordinate, u32> {
     let mut affected: HashMap<Coordinate, u32> = HashMap::new();
+    let mut detonated_bombs: HashSet<Coordinate> = HashSet::new();
+    detonate_explosion(map, &mut affected, bomb, range, &mut detonated_bombs, g);
+    affected
+}
 
+fn detonate_explosion(
+    map: &HashMap<Coordinate, Item>,
+    affected: &mut HashMap<Coordinate, u32>,
+    bomb: &Coordinate,
+    range: u32,
+    detonated_bombs: &mut HashSet<Coordinate>,
+    g: Expansion,
+) {
     if range == 0 {
-        return affected;
+        return;
     }
+
+    // let mut affected: HashMap<Coordinate, u32> = HashMap::new();
+    detonated_bombs.insert(*bomb);
+
     expansive_wave(
         map,
-        &mut affected,
+        affected,
         bomb,
         range + 1,
+        detonated_bombs,
         coordinate::Coordinate::right,
         g,
     );
     expansive_wave(
         map,
-        &mut affected,
+        affected,
         bomb,
         range + 1,
+        detonated_bombs,
         coordinate::Coordinate::left,
         g,
     );
     expansive_wave(
         map,
-        &mut affected,
+        affected,
         bomb,
         range + 1,
+        detonated_bombs,
         coordinate::Coordinate::up,
         g,
     );
     expansive_wave(
         map,
-        &mut affected,
+        affected,
         bomb,
         range + 1,
+        detonated_bombs,
         coordinate::Coordinate::down,
         g,
     );
-    affected
+    // *affected
 }
 
 fn expansive_wave(
@@ -220,6 +228,7 @@ fn expansive_wave(
     affected: &mut HashMap<Coordinate, u32>,
     coordinate: &Coordinate,
     range: u32,
+    detonated_bombs: &mut HashSet<Coordinate>,
     f: Displacement,
     g: Expansion,
 ) {
@@ -228,6 +237,9 @@ fn expansive_wave(
     }
     *affected.entry(*coordinate).or_insert(0) += 1;
 
+    // if !detonated_bombs.contains(coordinate) {
+    //     return;
+    // }
     let f = match g(map, coordinate, f) {
         Some(f) => f,
         None => return,
@@ -236,5 +248,13 @@ fn expansive_wave(
         Some(coordinate) => coordinate,
         None => return,
     };
-    expansive_wave(map, affected, &prox_coordinate, range - 1, f, g)
+    expansive_wave(
+        map,
+        affected,
+        &prox_coordinate,
+        range - 1,
+        detonated_bombs,
+        f,
+        g,
+    )
 }
