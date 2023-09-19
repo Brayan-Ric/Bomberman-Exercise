@@ -70,7 +70,7 @@ pub fn get_matrix_dimensions(path: &str) -> Result<Option<usize>, BombermanError
         row += 1;
         line.clear();
     }
-    if row != expected_columns.unwrap() {
+    if row != expected_columns.unwrap_or(0) {
         return Err(BombermanError::NonSquareBoardError);
     }
     Ok(expected_columns)

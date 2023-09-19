@@ -20,7 +20,8 @@ use std::{fs::File, io::Write};
 /// - `OutputPathError`: Indica que se produjo un error al acceder al archivo de salida.
 /// - `Write`: Indica que ocurrió un error al escribir en el archivo de salida.
 /// - `NonSquareBoardError`: Indica que el tablero no tiene dimensiones cuadradas.
-///
+/// - `InvalidEnemyLife`: Indica que la vida de un enemigo es inválida.
+/// - `EmptyFileError`: Indica que el archivo de entrada está vacío.
 #[derive(Debug, PartialEq)]
 pub enum BombermanError {
     InvalidCoordinate,
@@ -36,6 +37,8 @@ pub enum BombermanError {
     OutputPathError,
     Write,
     NonSquareBoardError,
+    InvalidEnemyLife,
+    EmptyFileError,
 }
 
 impl BombermanError {
@@ -88,6 +91,12 @@ impl BombermanError {
             }
             BombermanError::NonSquareBoardError => {
                 "El tablero no es cuadrado"
+            }
+            BombermanError::InvalidEnemyLife => {
+                "La vida de un enemigo esta fuera del rango. Rango: 1 al 3"
+            }
+            BombermanError::EmptyFileError => {
+                "El archivo de entrada esta vacio"
             }
         }
     }

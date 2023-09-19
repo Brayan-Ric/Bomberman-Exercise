@@ -1,5 +1,5 @@
 use crate::{
-    constants::{DEFLECTION, DOWN, ENEMY, LEFT, NORMAL_BOMB, RIGHT, ROCK, TRANSFER_BOMB, UP, WALL},
+    constants::{DEFLECTION, DOWN, ENEMY, LEFT, NORMAL_BOMB, RIGHT, ROCK, TRANSFER_BOMB, UP, WALL, MAX_LIFE},
     error::BombermanError,
 };
 
@@ -70,10 +70,7 @@ impl Item {
         };
 
         match item {
-            ENEMY => Ok(Item::Enemy(get_value(
-                s,
-                BombermanError::InvalidEnemyFormat,
-            )?)),
+            ENEMY => Self::create_enemy(s),
             NORMAL_BOMB => Ok(Item::NormalBomb(get_value(
                 s,
                 BombermanError::InvalidNormalBombFormat,
@@ -88,6 +85,34 @@ impl Item {
             )?)),
             _ => Err(BombermanError::InvalidItem),
         }
+    }
+
+    /// Crea un enemigo a partir de una cadena de texto que representa su vida.
+    ///
+    /// Esta función toma una cadena de texto `s` que debe contener la vida del enemigo como un número
+    /// entero no negativo. Si el formato de la cadena no es válido o la vida del enemigo supera el
+    /// valor máximo permitido, se devolverá un error correspondiente. En caso contrario, se crea un
+    /// enemigo con la vida especificada y se devuelve como un tipo de dato `Item`.
+    ///
+    /// # Argumentos
+    ///
+    /// * `s` - La cadena de texto que contiene la vida del enemigo.
+    ///         La cadena debe tener el siguiente formato: `FXXX` donde `XXX` es un número entero no negativo.
+    ///
+    /// # Errores
+    ///
+    /// Esta función puede devolver los siguientes errores:
+    ///
+    /// * `BombermanError::InvalidEnemyFormat` - Si la cadena `s` no tiene un nuevo valido.
+    /// * `BombermanError::InvalidEnemyLife` - Si la vida del enemigo supera el valor máximo permitido.
+    ///
+    fn create_enemy(s: &str) -> Result<Item, BombermanError>
+    {
+        let life = get_value(s, BombermanError::InvalidEnemyFormat)?;
+        if life > MAX_LIFE {
+            return Err(BombermanError::InvalidEnemyLife);
+        }
+        Ok(Item::Enemy(life))
     }
 }
 
@@ -235,7 +260,7 @@ mod tests {
     }
     #[test]
     fn test_new_item_enemy() {
-        assert_eq!(Item::new("F123"), Ok(Item::Enemy(123)));
+        assert_eq!(Item::new("F1"), Ok(Item::Enemy(1)));
     }
 
     #[test]

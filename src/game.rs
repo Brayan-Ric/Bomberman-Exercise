@@ -35,7 +35,7 @@ impl Game {
 
     pub fn denotate_bomb(&mut self, x: u32, y: u32) -> Result<(), BombermanError> {
         // let map_rc = Rc::new(RefCell::new(self.map.clone()));
-        let bomb_detonate = Coordinate::new(x, y, self.map_dimension);
+        let bomb_detonate = Coordinate::new(x, y, self.map_dimension - 1);
 
         let affected = match self.map.get(&bomb_detonate) {
             Some(Item::NormalBomb(range)) => {
@@ -76,7 +76,7 @@ impl Game {
         let mut writer = BufWriter::new(file);
         for x in 0..self.map_dimension {
             for y in 0..self.map_dimension {
-                let key = Coordinate::new(x, y, self.map_dimension);
+                let key = Coordinate::new(x, y, self.map_dimension - 1);
                 let value = self.map.get(&key).unwrap_or(&Item::Empty);
                 write_item(&mut writer, value)?;
                 if y != self.map_dimension - 1 {
@@ -124,7 +124,7 @@ pub fn process_line(
             continue;
         }
         hash.insert(
-            Coordinate::new(row as u32, y as u32, max_value),
+            Coordinate::new(row as u32, y as u32, max_value - 1),
             Item::new(s)?,
         );
     }

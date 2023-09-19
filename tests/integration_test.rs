@@ -161,3 +161,12 @@ fn test_transfer_bomb() {
     let _ = simulator_game(name_input.clone(), path_output.clone(), 0, 0);
     assert!(compare_files(&path_output, &path_expected_output));
 }
+
+#[test]
+fn test_max_enemy_life() {
+    let name_input = "./tests/inputs/max_enemy_life.txt".to_string();
+    let path_output = "./tests/outputs/max_enemy_life.txt".to_string();
+    let path_expected_output = "./tests/expected_output/max_enemy_life.txt".to_string();
+    let _ = simulator_game(name_input.clone(), path_output.clone(), 0, 0);
+    assert!(compare_files(&path_output, &path_expected_output));
+}

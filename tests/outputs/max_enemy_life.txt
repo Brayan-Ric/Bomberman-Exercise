@@ -1,0 +1,1 @@
+Error: La vida de un enemigo esta fuera del rango. Rango: 1 al 3
