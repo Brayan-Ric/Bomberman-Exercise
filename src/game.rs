@@ -1,5 +1,6 @@
 use std::any::Any;
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::io::{BufWriter, Write};
 
 use crate::constants::{DOWN, EMPTY_SQUARE, LEFT, RIGHT, UP};
@@ -157,10 +158,20 @@ fn normal_transfer_effect(
         _ => Some(f),
     }
 }
+// fn detonate_explosion_2(
+//     map: &HashMap<Coordinate, Item>,
+//     bomb: &Coordinate,
+//     range: u32,
+//     g: Expansion,
+// ) -> HashMap<Coordinate, u32>
+// {
+//     let mut detonated_bombs:HashSet<Coordinate> = HashSet::new();
+//     // detonate_explosion
+// }
 
 fn detonate_explosion(
     map: &HashMap<Coordinate, Item>,
-    coordinate: &Coordinate,
+    bomb: &Coordinate,
     range: u32,
     g: Expansion,
 ) -> HashMap<Coordinate, u32> {
@@ -172,7 +183,7 @@ fn detonate_explosion(
     expansive_wave(
         map,
         &mut affected,
-        coordinate,
+        bomb,
         range + 1,
         coordinate::Coordinate::right,
         g,
@@ -180,7 +191,7 @@ fn detonate_explosion(
     expansive_wave(
         map,
         &mut affected,
-        coordinate,
+        bomb,
         range + 1,
         coordinate::Coordinate::left,
         g,
@@ -188,7 +199,7 @@ fn detonate_explosion(
     expansive_wave(
         map,
         &mut affected,
-        coordinate,
+        bomb,
         range + 1,
         coordinate::Coordinate::up,
         g,
@@ -196,7 +207,7 @@ fn detonate_explosion(
     expansive_wave(
         map,
         &mut affected,
-        coordinate,
+        bomb,
         range + 1,
         coordinate::Coordinate::down,
         g,
