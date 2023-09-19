@@ -20,11 +20,6 @@ use crate::error::BombermanError;
 /// el nombre del archivo de entrada, la ruta de la carpeta de salida y las coordenadas de la
 /// primera bomba a detonar.
 ///
-/// # Notas
-///
-/// Asegúrate de proporcionar valores válidos para los campos `x` y `y` que estén dentro de los
-/// límites del mapa del juego.
-///
 #[derive(Debug)]
 pub struct Config {
     pub name_input: String,
@@ -49,12 +44,6 @@ impl Config {
     ///
     /// Esta función devuelve un resultado que indica si la creación de la configuración fue exitosa o
     /// si hubo errores en los argumentos de entrada.
-    ///
-    /// # Notas
-    ///
-    /// Asegúrate de proporcionar 5 argumentos de línea de comandos válidos, incluyendo el nombre del
-    /// programa, la ruta al archivo de entrada, la ruta de la carpeta de salida, la coordenada X y la
-    /// coordenada Y.
     ///
     pub fn new() -> Result<Config, BombermanError> {
         let args: Vec<String> = env::args().collect();
@@ -88,11 +77,6 @@ impl Config {
 /// Esta función devuelve un resultado que contiene el número entero no negativo si la conversión es
 /// exitosa. Si la conversión falla o el número es negativo, se devuelve un error de tipo
 /// `BombermanError` que indica que la coordenada no es válida.
-///
-/// # Notas
-///
-/// Asegúrate de proporcionar una cadena que represente un número entero no negativo como entrada
-/// para esta función. En caso contrario, se generará un error.
 ///
 fn get_coordinate(s: &str) -> Result<usize, BombermanError> {
     match s.parse::<usize>() {

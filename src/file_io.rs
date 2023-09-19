@@ -6,7 +6,6 @@ use std::{
 
 use crate::error::BombermanError;
 type Operacion = fn(&String, usize, u32, &mut dyn Any) -> Result<(), BombermanError>;
-// pub fn process_line(line: &String, row: usize, max_value: u32,ptr: &mut dyn Any) -> Result<(), BombermanError> {
 
 /// Lee un archivo de entrada en la ruta especificada y aplica una operación personalizada
 /// a cada línea del archivo.
@@ -24,23 +23,6 @@ type Operacion = fn(&String, usize, u32, &mut dyn Any) -> Result<(), BombermanEr
 /// Esta función puede devolver un error personalizado `BombermanError` si se encuentra un
 /// problema al leer el archivo o al aplicar la función de operación personalizada. Los
 /// detalles del error se incluirán en el resultado.
-///
-/// # Notas
-///
-/// - Asegúrese de proporcionar una función de operación `process` válida que cumpla con la
-///   firma requerida.
-/// - Los resultados o datos adicionales se pueden almacenar y manipular a través del objeto
-///   `ptr`, que debe implementar el trait `std::any::Any`.
-///
-/// # Importación
-///
-/// Debe importar el módulo `std::fs::File`, `std::io::BufReader`, y tener acceso al enum
-/// personalizado `BombermanError` definido en su proyecto para utilizar esta función.
-///
-/// # Más información
-///
-/// Para obtener más información sobre la lectura de archivos en Rust, consulte la documentación
-/// oficial de Rust: https://doc.rust-lang.org/std/fs/struct.File.html
 ///
 pub fn read_input(
     path: &str,

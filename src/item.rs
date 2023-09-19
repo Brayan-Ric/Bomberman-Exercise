@@ -19,15 +19,6 @@ use crate::{
 /// - `Deflection(char)`: Representa un elemento de desviación con una dirección especificada (carácter).
 /// - `Empty`: Representa una casilla vacía sin ningún elemento.
 ///
-/// # Importación
-///
-/// Debe tener acceso al enum `Item` definido en su proyecto para utilizar esta estructura de datos.
-///
-/// # Más información
-///
-/// Para obtener más información sobre la enumeración en Rust, consulte la documentación oficial:
-/// https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html
-///
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub enum Item {
@@ -59,19 +50,6 @@ impl Item {
     /// - `BombermanError::InvalidNormalBombFormat`: Se produce cuando la cadena `s` representa una bomba normal, pero el formato no es válido.
     /// - `BombermanError::InvalidTransferBombFormat`: Se produce cuando la cadena `s` representa una bomba de transferencia, pero el formato no es válido.
     /// - `BombermanError::InvalidDeflectionFormat`: Se produce cuando la cadena `s` representa un elemento de desviación, pero el formato no es válido.
-    ///
-    /// # Importación
-    ///
-    /// Debe tener acceso a la estructura `Item` y al enum `BombermanError` definidos en su proyecto
-    /// para utilizar esta función.
-    ///
-    /// # Más información
-    ///
-    /// Esta función facilita la creación de elementos `Item` a partir de cadenas de caracteres.
-    /// Si desea crear elementos `Item` manualmente, consulte la documentación de la estructura `Item`.
-    ///
-    /// Para obtener más información sobre el manejo de errores en Rust, consulte:
-    /// https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html
     ///
     pub fn new(s: &str) -> Result<Item, BombermanError> {
         if s.is_empty() {
@@ -154,15 +132,6 @@ impl std::fmt::Display for Item {
 ///
 /// - `BombermanError`: Se produce cuando no se puede extraer un valor numérico válido de la cadena `s`.
 ///
-/// # Importación
-///
-/// Debe tener acceso al enum `BombermanError` definido en su proyecto para utilizar esta función.
-///
-/// # Más información
-///
-/// Esta función es útil para extraer valores numéricos de cadenas de caracteres que siguen un formato específico.
-/// Si necesita extraer otros tipos de datos, considere adaptar esta función según sus necesidades.
-///
 fn get_value(s: &str, e: BombermanError) -> Result<u32, BombermanError> {
     let num_str: String = s.chars().skip(1).collect();
 
@@ -175,7 +144,8 @@ fn get_value(s: &str, e: BombermanError) -> Result<u32, BombermanError> {
 
 /// Extrae y retorna el segundo carácter de una cadena como un valor `char`.
 ///
-/// Esta función toma una cadena como entrada y verifica si tiene exactamente dos caracteres. Si es así, extrae y retorna el segundo carácter como un `char`. Si la cadena no tiene dos caracteres, se devuelve un error `BombermanError`.
+/// Esta función toma una cadena como entrada y verifica si tiene exactamente dos caracteres. 
+/// Si es así, extrae y retorna el segundo carácter como un `char` si es una direccion valida (L, R, U, D)
 ///
 /// # Argumentos
 ///

@@ -29,7 +29,7 @@ impl Game {
 
         Ok(Game {
             map,
-            map_dimension, // CHANGE THIS
+            map_dimension,
         })
     }
 
