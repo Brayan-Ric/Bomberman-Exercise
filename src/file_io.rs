@@ -43,7 +43,7 @@ type Operacion = fn(&String, usize, u32, &mut dyn Any) -> Result<(), BombermanEr
 /// oficial de Rust: https://doc.rust-lang.org/std/fs/struct.File.html
 ///
 pub fn read_input(
-    path: &String,
+    path: &str,
     max_value: u32,
     process: Operacion,
     ptr: &mut dyn Any,
@@ -63,7 +63,7 @@ pub fn read_input(
     }
     Ok(())
 }
-pub fn get_matrix_dimensions(path: &String) -> Option<usize> {
+pub fn get_matrix_dimensions(path: &str) -> Option<usize> {
     let file = match open_file_for_reading(path) {
         Ok(f) => f,
         Err(_) => return None,
@@ -128,7 +128,7 @@ pub fn get_matrix_dimensions(path: &String) -> Option<usize> {
 pub fn open_file_for_reading(path: &str) -> Result<File, BombermanError> {
     match File::open(path) {
         Ok(f) => Ok(f),
-        Err(_) => return Err(BombermanError::InputPathError),
+        Err(_) => Err(BombermanError::InputPathError),
     }
 }
 

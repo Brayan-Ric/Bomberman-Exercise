@@ -74,7 +74,7 @@ impl Item {
     /// https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html
     ///
     pub fn new(s: &str) -> Result<Item, BombermanError> {
-        if s.len() == 0 {
+        if s.is_empty() {
             return Err(BombermanError::InvalidItem);
         }
 

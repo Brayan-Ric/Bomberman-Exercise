@@ -94,10 +94,10 @@ impl Config {
 /// Asegúrate de proporcionar una cadena que represente un número entero no negativo como entrada
 /// para esta función. En caso contrario, se generará un error.
 ///
-fn get_coordinate(s: &String) -> Result<usize, BombermanError> {
+fn get_coordinate(s: &str) -> Result<usize, BombermanError> {
     match s.parse::<usize>() {
         Ok(value) => Ok(value),
-        Err(_) => return Err(BombermanError::InvalidCoordinate),
+        Err(_) => Err(BombermanError::InvalidCoordinate),
     }
 }
 

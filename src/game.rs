@@ -70,12 +70,12 @@ impl Game {
         }
     }
 
-    pub fn save_game(&self, path: &String) -> Result<(), BombermanError> {
+    pub fn save_game(&self, path: &str) -> Result<(), BombermanError> {
         let file = file_io::open_file_for_writing(path)?;
         let mut writer = BufWriter::new(file);
         for x in 0..self.map_dimension {
             for y in 0..self.map_dimension {
-                let key = Coordinate::new(x as u32, y as u32, self.map_dimension);
+                let key = Coordinate::new(x, y, self.map_dimension);
                 let value = self.map.get(&key).unwrap_or(&Item::Empty);
                 write_item(&mut writer, value)?;
             }
@@ -92,7 +92,7 @@ fn write_item(writer: &mut BufWriter<std::fs::File>, value: &Item) -> Result<(),
     };
     match writer.flush() {
         Ok(_) => Ok(()),
-        Err(_) => return Err(BombermanError::Write),
+        Err(_) => Err(BombermanError::Write),
     }
 }
 
@@ -114,7 +114,7 @@ pub fn process_line(
 ) -> Result<(), BombermanError> {
     let hash: &mut HashMap<Coordinate, Item> = process_generic_ptr(ptr)?;
 
-    let words = line.trim().split_whitespace();
+    let words = line.split_whitespace();
 
     for (y, s) in words.enumerate() {
         if s == EMPTY_SQUARE {
@@ -217,11 +217,11 @@ fn expansive_wave(
     }
     *affected.entry(*coordinate).or_insert(0) += 1;
 
-    let f = match normal_bomb_effect(map, &coordinate, f) {
+    let f = match g(map, coordinate, f) {
         Some(f) => f,
         None => return,
     };
-    let prox_coordinate = match f(&coordinate) {
+    let prox_coordinate = match f(coordinate) {
         Some(coordinate) => coordinate,
         None => return,
     };

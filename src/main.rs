@@ -29,9 +29,6 @@ fn main() {
 
     match game.save_game(&conf.path_output) {
         Ok(_) => (),
-        Err(e) => {
-            println!("Error: {}", e.message());
-            return;
-        }
+        Err(e) => println!("Error: {}", e.message()),
     }
 }
