@@ -55,24 +55,6 @@ fn compare_files(file_path1: &str, file_path2: &str) -> bool {
     buffer1 == buffer2
 }
 
-// fn compare_string_to_file_contents(file_path: String, content: String) -> bool {
-//     // Abrir el archivo para lectura
-//     let mut file = match File::open(file_path) {
-//         Ok(file) => file,
-//         Err(_) => return false,
-//     };
-
-//     let mut file_contents = String::new();
-//     match file.read_to_string(&mut file_contents)
-//     {
-//         Ok(_) => (),
-//         Err(_) => return false,
-//     };
-
-//     // Comparar el contenido del archivo con la cadena dada
-//     file_contents == content
-// }
-
 #[test]
 fn test_input_file_not_found() {
     let name_input = "file_not_found.txt".to_string();
@@ -132,5 +114,50 @@ fn test_catedra_3() {
     let path_output = "./tests/outputs/catedra_3.txt".to_string();
     let path_expected_output = "./tests/expected_output/catedra_3.txt".to_string();
     let _ = simulator_game(name_input.clone(), path_output.clone(), 4, 0);
+    assert!(compare_files(&path_output, &path_expected_output));
+}
+
+#[test]
+fn test_down_deviation() {
+    let name_input = "./tests/inputs/deviation_down.txt".to_string();
+    let path_output = "./tests/outputs/deviation_down.txt".to_string();
+    let path_expected_output = "./tests/expected_output/deviation_down.txt".to_string();
+    let _ = simulator_game(name_input.clone(), path_output.clone(), 0, 1);
+    assert!(compare_files(&path_output, &path_expected_output));
+}
+
+#[test]
+fn test_up_deviation() {
+    let name_input = "./tests/inputs/deviation_up.txt".to_string();
+    let path_output = "./tests/outputs/deviation_up.txt".to_string();
+    let path_expected_output = "./tests/expected_output/deviation_up.txt".to_string();
+    let _ = simulator_game(name_input.clone(), path_output.clone(), 2, 1);
+    assert!(compare_files(&path_output, &path_expected_output));
+}
+
+#[test]
+fn test_right_deviation() {
+    let name_input = "./tests/inputs/deviation_right.txt".to_string();
+    let path_output = "./tests/outputs/deviation_right.txt".to_string();
+    let path_expected_output = "./tests/expected_output/deviation_right.txt".to_string();
+    let _ = simulator_game(name_input.clone(), path_output.clone(), 0, 1);
+    assert!(compare_files(&path_output, &path_expected_output));
+}
+
+#[test]
+fn test_left_deviation() {
+    let name_input = "./tests/inputs/deviation_left.txt".to_string();
+    let path_output = "./tests/outputs/deviation_left.txt".to_string();
+    let path_expected_output = "./tests/expected_output/deviation_left.txt".to_string();
+    let _ = simulator_game(name_input.clone(), path_output.clone(), 0, 1);
+    assert!(compare_files(&path_output, &path_expected_output));
+}
+
+#[test]
+fn test_transfer_bomb() {
+    let name_input = "./tests/inputs/transfer_bomb.txt".to_string();
+    let path_output = "./tests/outputs/transfer_bomb.txt".to_string();
+    let path_expected_output = "./tests/expected_output/transfer_bomb.txt".to_string();
+    let _ = simulator_game(name_input.clone(), path_output.clone(), 0, 0);
     assert!(compare_files(&path_output, &path_expected_output));
 }
