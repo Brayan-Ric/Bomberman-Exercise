@@ -1,5 +1,7 @@
 use crate::{
-    constants::{DEFLECTION, DOWN, ENEMY, LEFT, NORMAL_BOMB, RIGHT, ROCK, TRANSFER_BOMB, UP, WALL, MAX_LIFE},
+    constants::{
+        DEFLECTION, DOWN, ENEMY, LEFT, MAX_LIFE, NORMAL_BOMB, RIGHT, ROCK, TRANSFER_BOMB, UP, WALL,
+    },
     error::BombermanError,
 };
 
@@ -106,8 +108,7 @@ impl Item {
     /// * `BombermanError::InvalidEnemyFormat` - Si la cadena `s` no tiene un nuevo valido.
     /// * `BombermanError::InvalidEnemyLife` - Si la vida del enemigo supera el valor máximo permitido.
     ///
-    fn create_enemy(s: &str) -> Result<Item, BombermanError>
-    {
+    fn create_enemy(s: &str) -> Result<Item, BombermanError> {
         let life = get_value(s, BombermanError::InvalidEnemyFormat)?;
         if life > MAX_LIFE {
             return Err(BombermanError::InvalidEnemyLife);
@@ -169,7 +170,7 @@ fn get_value(s: &str, e: BombermanError) -> Result<u32, BombermanError> {
 
 /// Extrae y retorna el segundo carácter de una cadena como un valor `char`.
 ///
-/// Esta función toma una cadena como entrada y verifica si tiene exactamente dos caracteres. 
+/// Esta función toma una cadena como entrada y verifica si tiene exactamente dos caracteres.
 /// Si es así, extrae y retorna el segundo carácter como un `char` si es una direccion valida (L, R, U, D)
 ///
 /// # Argumentos

@@ -23,7 +23,7 @@ impl Coordinate {
     /// Esta función devuelve una nueva instancia de `Coordinate` con las coordenadas `x` e `y`
     /// especificadas, así como el valor máximo permitido para las coordenadas. Se utiliza para
     /// crear objetos `Coordinate` de manera conveniente.
-    /// 
+    ///
     /// # Observacion:
     /// Para mejorar la eficiencia del tp, se agrega el valor maximo de las coordenadas, para no tener que calcularlo cada vez que se llama a las funciones de movimiento.
     /// Pero tambien no se valida el maximo de las coordenadas, ya que la implementacion hecha nos asegura que no se va a salir del tablero.
@@ -129,5 +129,4 @@ mod tests {
         let result = coord.left();
         assert_eq!(result, None);
     }
-
 }

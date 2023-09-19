@@ -50,7 +50,7 @@ impl BombermanError {
     /// # Retorno
     ///
     /// Un valor `&str` que contiene el mensaje descriptivo del error actual.
-    /// 
+    ///
     pub fn message(&self) -> &str {
         match self {
             BombermanError::InvalidCoordinate => {

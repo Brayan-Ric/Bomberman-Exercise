@@ -27,10 +27,7 @@ impl Game {
         };
         file_io::read_input(&conf.name_input, map_dimension, process_line, &mut map)?;
 
-        Ok(Game {
-            map,
-            map_dimension,
-        })
+        Ok(Game { map, map_dimension })
     }
 
     pub fn denotate_bomb(&mut self, x: u32, y: u32) -> Result<(), BombermanError> {

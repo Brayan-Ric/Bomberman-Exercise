@@ -6,8 +6,8 @@ fn main() {
     let conf = match Config::new() {
         Ok(conf) => conf,
         Err(e) => {
-             // Los errores del config se imprimiran por stdin
-             // para mejorar la efeciencia del programa
+            // Los errores del config se imprimiran por stdin
+            // para mejorar la efeciencia del programa
             println!("Error: {}", e.message());
             return;
         }

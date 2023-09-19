@@ -13,4 +13,4 @@ pub const LEFT: char = 'L';
 pub const RIGHT: char = 'R';
 pub const UP: char = 'U';
 pub const DOWN: char = 'D';
-pub const MAX_LIFE:u32 = 3;
+pub const MAX_LIFE: u32 = 3;
