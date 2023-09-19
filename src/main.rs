@@ -10,7 +10,6 @@ fn main() {
             return;
         }
     };
-    // file_io::process_line(&"B2 R R _ F1 _ _".to_string());
     let mut game = match Game::new(&conf) {
         Ok(game) => game,
         Err(e) => {

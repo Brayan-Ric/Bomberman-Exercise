@@ -173,7 +173,7 @@ fn detonate_explosion(
         map,
         &mut affected,
         coordinate,
-        range,
+        range + 1,
         coordinate::Coordinate::right,
         g,
     );
@@ -181,7 +181,7 @@ fn detonate_explosion(
         map,
         &mut affected,
         coordinate,
-        range,
+        range + 1,
         coordinate::Coordinate::left,
         g,
     );
@@ -189,7 +189,7 @@ fn detonate_explosion(
         map,
         &mut affected,
         coordinate,
-        range,
+        range + 1,
         coordinate::Coordinate::up,
         g,
     );
@@ -197,7 +197,7 @@ fn detonate_explosion(
         map,
         &mut affected,
         coordinate,
-        range,
+        range + 1,
         coordinate::Coordinate::down,
         g,
     );
