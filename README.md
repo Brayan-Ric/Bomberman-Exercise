@@ -1,4 +1,4 @@
-# Bomberman R
+# Bomberman con Rust
 
 Contexto
 Bomberman es una franquicia de videojuegos originalmente desarrollada por Hudson Soft en 1983 para PC, y posteriormente para Famicon. Esta franquicia ha tenido un gran éxito en Japon, aunque este no es tan grande en Occidente. Bomberman ha sido la mascota de Hudson Soft a lo largo de toda su historia, hasta su absorción por parte de Konami en 2012.
@@ -141,10 +141,10 @@ En caso de que un error ocurriese, se deberá escribir en el archivo un mensaje 
 ## Invocacion del programa
 La invocacion del programa debera incluir como parametros (en el siguiente orden):
 
-la ruta al archivo de input.
-la ruta a la carpeta/directorio de output.
-la coordenada X de la primera bomba a denotar.
-la coordenada Y de la primera bomba a denotar.
+1. La ruta al archivo de input.
+2. La ruta a la carpeta/directorio de output.
+3. La coordenada X de la primera bomba a denotar.
+4. La coordenada Y de la primera bomba a denotar.
 
 ```
 cargo run -- maze.txt /path/to/output_dir/ x y
