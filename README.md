@@ -79,6 +79,7 @@ _ W _ W _ W _
 _ _ _ _ _ _ B1
 ```
 ![Ejemplo 2](./images/ejemplo_2.png)
+
 Si detonamos la bomba en (2, 4), el camino de bombas detonadas sera:
 
 (2, 4) -> (2, 2) -> (2, 0) -> (4, 0)
@@ -111,6 +112,7 @@ _ W _ W _ W _
 _ _ _ _ _ _ _
 ```
 ![Ejemplo 3](./images/ejemplo_3.png)
+
 Si detonamos la bomba en (0, 4), los caminos de bombas detonadas seran:
 
 (0, 4) -> (0, 2) (0, 4) -> (2, 4)
